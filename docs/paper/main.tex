@@ -26,19 +26,19 @@
 }
 
 % Title and author information
-\title{HumanEvalComm V2: Enhanced Benchmarking Framework for LLM Communication Competence in Code Generation}
+	\title{HumanEvalComm V2: Enhanced Benchmarking Framework for LLM Communication Competence in Code Generation}
 
-\author{
-    \IEEEauthorblockN{Jie JW Wu}
-    \IEEEauthorblockA{Department of Computer Science\\
-                      University Name\\
-                      Email: jie-jw-wu@university.edu}
-    \and
-    \IEEEauthorblockN{Fatemeh H. Fard}
-    \IEEEauthorblockA{Department of Computer Science\\
-                      University Name\\
-                      Email: fard@university.edu}
-}
+% \author{
+%     \IEEEauthorblockN{Jie JW Wu}
+%     \IEEEauthorblockA{Department of Computer Science\\
+%                       University Name\\
+%                       Email: jie-jw-wu@university.edu}
+%     \and
+%     \IEEEauthorblockN{Fatemeh H. Fard}
+%     \IEEEauthorblockA{Department of Computer Science\\
+%                       University Name\\
+%                       Email: fard@university.edu}
+% }
 
 \begin{document}
 
@@ -160,9 +160,9 @@ Beyond the binary question-asking assessment of the original framework, HumanEva
 
 The Communication Rate represents the proportion of problems where the model demonstrates recognition of clarification needs and initiates appropriate questioning behavior. This metric is calculated as:
 
-\begin{equation}
-\text{Comm Rate} = \frac{\text{Problems with clarification questions}}{\text{Total problems}}
-\end{equation}
+\begin{align}
+	ext{Comm Rate} = \frac{\text{Problems with clarification questions}}{\text{Total problems}}
+\end{align}
 
 A response is considered clarification-seeking if it contains explicit questions about problem requirements, constraints, or specifications that indicate the model has identified potential ambiguities or gaps in the provided information. This metric captures the model's baseline sensitivity to problematic problem formulations, serving as a fundamental indicator of communication awareness.
 
@@ -222,26 +222,30 @@ Computational complexity analysis and resource usage assessment.
 
 To provide a unified assessment framework, we introduce the V2 Score, a composite metric that balances multiple evaluation dimensions:
 
-\begin{equation}
-\text{V2 Score} = w_1 \cdot \text{Communication} + w_2 \cdot \text{Correctness} + w_3 \cdot \text{Trustworthiness}
-\end{equation}
+\begin{multline}
+	ext{V2 Score} = w_1 \cdot \text{Communication} + w_2 \cdot \text{Correctness} \\
+\quad + w_3 \cdot \text{Trustworthiness}
+\end{multline}
 
 Where the component scores are calculated as:
 
 \textbf{Communication Component:}
-\begin{equation}
-\text{Communication} = \alpha \cdot \text{Comm Rate} + \beta \cdot \text{Good Q Rate} + \gamma \cdot \text{Effectiveness}
-\end{equation}
+\begin{multline}
+	ext{Communication} = \alpha \cdot \text{Comm Rate} + \beta \cdot \text{Good Q Rate} \\
+\quad + \gamma \cdot \text{Effectiveness}
+\end{multline}
 
 \textbf{Correctness Component:}
-\begin{equation}
-\text{Correctness} = \delta \cdot \text{Pass@1} + \epsilon \cdot \text{Test Pass Rate} + \zeta \cdot \text{Readability}
-\end{equation}
+\begin{multline}
+	ext{Correctness} = \delta \cdot \text{Pass@1} + \epsilon \cdot \text{Test Pass Rate} \\
+\quad + \zeta \cdot \text{Readability}
+\end{multline}
 
 \textbf{Trustworthiness Component:}
-\begin{equation}
-\text{Trustworthiness} = \eta \cdot \text{Security} + \theta \cdot \text{Reliability} + \iota \cdot \text{Efficiency}
-\end{equation}
+\begin{multline}
+	ext{Trustworthiness} = \eta \cdot \text{Security} + \theta \cdot \text{Reliability} \\
+\quad + \iota \cdot \text{Efficiency}
+\end{multline}
 
 The weights ($w_1$, $w_2$, $w_3$) are calibrated based on empirical analysis of developer preferences and code quality priorities, with component sub-weights ($\alpha$, $\beta$, $\gamma$, etc.) determined through factor analysis of benchmark performance data. This hierarchical scoring system ensures that the V2 Score reflects both high-level evaluation dimensions and their constituent metrics.
 
@@ -271,18 +275,18 @@ The leaderboard provides real-time visualization of model performance across all
     \item \textbf{Trend Analysis}: Historical performance tracking and improvement visualization
 \end{itemize}
 
-\subsubsection{Configurable Data Pipeline}
+% \subsubsection{Configurable Data Pipeline}
 
-The leaderboard supports flexible data ingestion with configurable directory structures:
+% The leaderboard supports flexible data ingestion with configurable directory structures:
 
-\begin{lstlisting}[language=Python]
-# Data directory configuration
-DATA_DIR = os.environ.get('HUMANEVAL_DATA_DIR', 'benchmark_v2/')
+% \begin{lstlisting}[language=Python]
+% # Data directory configuration
+% DATA_DIR = os.environ.get('HUMANEVAL_DATA_DIR', 'benchmark_v2/')
 
-# File pattern matching for automatic discovery
-LEADERBOARD_PATTERN = 'v2_*leaderboard*.csv'
-RESULTS_PATTERN = 'v2_*results*.json'
-\end{lstlisting}
+% # File pattern matching for automatic discovery
+% LEADERBOARD_PATTERN = 'v2_*leaderboard*.csv'
+% RESULTS_PATTERN = 'v2_*results*.json'
+% \end{lstlisting}
 
 \subsubsection{Developer Integration Features}
 
@@ -300,52 +304,53 @@ The platform includes several features designed for developer workflows:
 The leaderboard displays all key metrics with their underlying calculations:
 
 \textbf{Communication Metrics:}
-\begin{equation}
-\text{Comm Rate} = \frac{\text{Problems with clarification questions}}{\text{Total problems}}
-\end{equation}
+\begin{align}
+	ext{Comm Rate} = \frac{\text{Problems with clarification questions}}{\text{Total problems}}
+\end{align}
 
-\begin{equation}
-\text{Good Q Rate} = \frac{\sum \text{Question quality scores}}{\text{Total clarification questions}}
-\end{equation}
+\begin{align}
+	ext{Good Q Rate} = \frac{\sum \text{Question quality scores}}{\text{Total clarification questions}}
+\end{align}
 
-\begin{equation}
-\text{Communication Effectiveness} = \frac{\text{Improved outcomes after clarification}}{\text{Clarification attempts}}
-\end{equation}
+\begin{align}
+	ext{Communication Effectiveness} = \frac{\text{Improved outcomes after clarification}}{\text{Clarification attempts}}
+\end{align}
 
 \textbf{Code Quality Metrics:}
-\begin{equation}
-\text{Pass@1} = \frac{\text{Correct solutions on first attempt}}{\text{Total problems}}
-\end{equation}
+\begin{align}
+	ext{Pass@1} = \frac{\text{Correct solutions on first attempt}}{\text{Total problems}}
+\end{align}
 
-\begin{equation}
-\text{Test Pass Rate} = \frac{\text{Passing test cases}}{\text{Total test cases}}
-\end{equation}
+\begin{align}
+	ext{Test Pass Rate} = \frac{\text{Passing test cases}}{\text{Total test cases}}
+\end{align}
 
-\begin{equation}
-\text{Readability Score} = f(\text{Static analysis metrics})
-\end{equation}
+\begin{align}
+	ext{Readability Score} = f(\text{Static analysis metrics})
+\end{align}
 
 \textbf{Trustworthiness Metrics:}
-\begin{equation}
-\text{Security Score} = 1 - \frac{\text{Security vulnerabilities}}{\text{Max possible vulnerabilities}}
-\end{equation}
+\begin{align}
+	ext{Security Score} = 1 - \frac{\text{Security vulnerabilities}}{\text{Max possible vulnerabilities}}
+\end{align}
 
-\begin{equation}
-\text{Reliability Score} = 1 - \frac{\text{Inconsistent outputs}}{\text{Total outputs}}
-\end{equation}
+\begin{align}
+	ext{Reliability Score} = 1 - \frac{\text{Inconsistent outputs}}{\text{Total outputs}}
+\end{align}
 
-\begin{equation}
-\text{Efficiency Score} = \frac{\text{Optimal complexity}}{\text{Actual complexity}}
-\end{equation}
+\begin{align}
+	ext{Efficiency Score} = \frac{\text{Optimal complexity}}{\text{Actual complexity}}
+\end{align}
 
 \textbf{V2 Composite Score:}
-\begin{equation}
-\text{V2 Score} = w_1 \cdot \text{Comm} + w_2 \cdot \text{Correctness} + w_3 \cdot \text{Trustworthiness}
-\end{equation}
+\begin{multline}
+	ext{V2 Score} = w_1 \cdot \text{Comm} + w_2 \cdot \text{Correctness} \\
+\quad + w_3 \cdot \text{Trustworthiness}
+\end{multline}
 
-\begin{equation}
-\text{where } w_1 + w_2 + w_3 = 1
-\end{equation}
+\begin{align}
+	ext{where } w_1 + w_2 + w_3 = 1
+\end{align}
 
 The leaderboard provides transparency into these calculations, allowing developers to understand how different models achieve their scores and make informed decisions about AI tool adoption.
 
@@ -387,13 +392,13 @@ Interestingly, we observed that higher communication competence correlated with 
 
 These improvements can be quantified as:
 
-\begin{equation}
+\begin{align}
 \Delta \text{V2 Score} = \text{V2 Score}_{\text{Qwen}} - \text{V2 Score}_{\text{Llama}} = 7.7 - 7.2 = 0.5
-\end{equation}
+\end{align}
 
-\begin{equation}
-\text{Communication Advantage} = \frac{\text{Comm Rate}_{\text{Qwen}} - \text{Comm Rate}_{\text{Llama}}}{\text{Comm Rate}_{\text{Llama}}} = \frac{0.50 - 0.17}{0.17} = 1.94
-\end{equation}
+\begin{align}
+	ext{Communication Advantage} = \frac{\text{Comm Rate}_{\text{Qwen}} - \text{Comm Rate}_{\text{Llama}}}{\text{Comm Rate}_{\text{Llama}}} = \frac{0.50 - 0.17}{0.17} = 1.94
+\end{align}
 
 \subsubsection{Problem Type Analysis}
 
@@ -415,17 +420,17 @@ Both evaluated models achieved perfect Pass@1 rates of 100\%, demonstrating stro
 
 Security assessment revealed that both models achieved solid security scores (74-76), with Llama-3.1-8B-Instruct showing a slight edge. Both models demonstrated perfect efficiency scores (1.00) and high reliability scores (0.95).
 
-\begin{equation}
-\text{Security Comparison} = \text{Security}_{\text{Llama}} - \text{Security}_{\text{Qwen}} = 76 - 74 = 2
-\end{equation}
+\begin{align}
+	ext{Security Comparison} = \text{Security}_{\text{Llama}} - \text{Security}_{\text{Qwen}} = 76 - 74 = 2
+\end{align}
 
-\begin{equation}
-\text{Efficiency Score} = 1.00 \text{ (both models)}
-\end{equation}
+\begin{align}
+	ext{Efficiency Score} = 1.00 \text{ (both models)}
+\end{align}
 
-\begin{equation}
-\text{Reliability Score} = 0.95 \text{ (both models)}
-\end{equation}
+\begin{align}
+	ext{Reliability Score} = 0.95 \text{ (both models)}
+\end{align}
 
 Readability scores showed Qwen2.5-Coder-32B-Instruct with superior code quality (94) compared to Llama-3.1-8B-Instruct (84).
 
@@ -449,13 +454,13 @@ The V2 scoring system revealed clear performance differentiation between the eva
     \item \textbf{Performance Gap}: The 0.5-point difference highlights the impact of communication competence on overall evaluation
 \end{itemize}
 
-\begin{equation}
-\text{V2 Score}_{\text{Qwen}} = 7.7,\ \text{V2 Score}_{\text{Llama}} = 7.2
-\end{equation}
+\begin{align}
+	ext{V2 Score}_{\text{Qwen}} = 7.7,\ \text{V2 Score}_{\text{Llama}} = 7.2
+\end{align}
 
-\begin{equation}
-\text{Performance Ratio} = \frac{\text{V2 Score}_{\text{Qwen}}}{\text{V2 Score}_{\text{Llama}}} = \frac{7.7}{7.2} = 1.069
-\end{equation}
+\begin{align}
+	ext{Performance Ratio} = \frac{\text{V2 Score}_{\text{Qwen}}}{\text{V2 Score}_{\text{Llama}}} = \frac{7.7}{7.2} = 1.069
+\end{align}
 
 The results suggest that models with stronger communication capabilities, as exemplified by Qwen2.5-Coder-32B-Instruct, achieve higher composite scores across the multi-dimensional evaluation framework.
 
