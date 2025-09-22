@@ -84,6 +84,7 @@ HumanEvalComm V2 addresses these limitations through several key innovations:
     \item \textbf{Enhanced Communication Metrics}: Beyond question detection, we assess clarification quality, problem comprehension depth, and communication effectiveness.
     \item \textbf{Comprehensive Trustworthiness Evaluation}: Integration of security analysis, reliability testing, and efficiency assessment alongside traditional correctness metrics.
     \item \textbf{V2 Composite Scoring System}: A holistic evaluation framework that balances communication competence with code quality and trustworthiness.
+    \item \textbf{Interactive Web Leaderboard Platform}: A production-ready web application that bridges the gap between academic benchmarks and real-world developer adoption, providing accessible AI evaluation insights through an intuitive interface.
     \item \textbf{Large-Scale Empirical Study}: Evaluation of two advanced LLMs across the full benchmark framework, providing robust statistical insights into communication competence patterns.
 \end{itemize}
 
@@ -276,22 +277,67 @@ The comprehensive evaluation pipeline consists of four integrated stages:
 
 \subsection{Developer Tools and Interactive Leaderboard}
 
-To facilitate practical adoption and enable developers to leverage HumanEvalComm V2 insights, we developed a comprehensive interactive leaderboard and visualization platform. This developer-facing tool transforms raw benchmark results into actionable intelligence for AI-assisted development.
+While academic benchmarks like HumanEvalComm V2 provide rigorous evaluation methodologies, a critical gap often exists between research insights and practical developer adoption. To bridge this gap and transform theoretical evaluation results into actionable developer intelligence, we implemented a comprehensive web-based leaderboard platform that serves as the primary interface between the benchmark framework and real-world software development workflows.
+
+\subsubsection{Bridging the Gap: From Academic Evaluation to Developer Tools}
+
+Traditional LLM evaluation frameworks typically produce results that remain confined to research papers and academic discussions. HumanEvalComm V2's leaderboard platform addresses this limitation by providing developers with direct access to evaluation insights through an intuitive web interface. This approach democratizes access to sophisticated AI evaluation metrics, enabling developers to make informed decisions about AI tool adoption without requiring deep expertise in machine learning evaluation methodologies.
+
+The platform serves as a critical bridge by:
+\begin{itemize}
+    \item \textbf{Translating Complex Metrics}: Converting academic evaluation scores into developer-friendly visualizations and explanations
+    \item \textbf{Enabling Real-time Comparison}: Allowing developers to compare AI models across relevant criteria for their specific use cases
+    \item \textbf{Facilitating Tool Selection}: Providing evidence-based guidance for choosing appropriate AI coding assistants
+    \item \textbf{Supporting Continuous Evaluation}: Enabling ongoing assessment as new models and tools become available
+\end{itemize}
+
+\subsubsection{Web UI Implementation and Architecture}
+
+The leaderboard platform is built as a modern web application using Flask and enhanced visualization libraries, providing a responsive and interactive user experience. The implementation includes:
+
+\textbf{Backend Architecture:}
+\begin{itemize}
+    \item \textbf{Flask Web Framework}: Lightweight Python web framework for robust API development
+    \item \textbf{Data Management Layer}: Automated ingestion and processing of benchmark results from CSV and JSON formats
+    \item \textbf{Real-time Data Pipeline}: Configurable data ingestion supporting multiple evaluation runs and model comparisons
+    \item \textbf{RESTful API Endpoints}: Programmatic access for integration with development tools and CI/CD pipelines
+\end{itemize}
+
+\textbf{Frontend Interface:}
+\begin{itemize}
+    \item \textbf{Interactive Dashboard}: Real-time visualization of model performance across all V2 metrics
+    \item \textbf{Multi-dimensional Filtering}: Dynamic filtering by model type, performance thresholds, and evaluation criteria
+    \item \textbf{Comparative Analysis Tools}: Side-by-side model comparisons with statistical significance testing
+    \item \textbf{Historical Trend Analysis}: Tracking performance evolution across model versions and evaluation runs
+\end{itemize}
 
 \subsubsection{Interactive Leaderboard Dashboard}
 
-The leaderboard provides real-time visualization of model performance across all evaluation dimensions:
+The core of the platform is a comprehensive dashboard that transforms raw benchmark data into developer-actionable insights:
 
 \begin{itemize}
-    \item \textbf{Multi-dimensional Rankings}: Sortable tables displaying V2 composite scores alongside individual metrics
-    \item \textbf{Interactive Charts}: Radar plots, bar charts, and heatmaps for comparative analysis
-    \item \textbf{Detailed Model Profiles}: Individual model pages with performance breakdowns by problem type and clarification category
-    \item \textbf{Trend Analysis}: Historical performance tracking and improvement visualization
+    \item \textbf{Multi-dimensional Rankings}: Sortable tables displaying V2 composite scores alongside individual component metrics (Communication, Correctness, Trustworthiness)
+    \item \textbf{Interactive Charts}: Radar plots for holistic model comparison, bar charts for metric-specific analysis, and heatmaps for cross-model performance patterns
+    \item \textbf{Detailed Model Profiles}: Individual model pages with performance breakdowns by problem type, clarification category, and evaluation dimension
+    \item \textbf{Trend Analysis}: Historical performance tracking with version comparison and improvement visualization
+    \item \textbf{Custom Benchmarking}: User-defined evaluation scenarios based on specific development contexts or requirements
+\end{itemize}
+
+\subsubsection{Developer Integration Features}
+
+The platform includes several features specifically designed to integrate with developer workflows and reduce friction in AI tool adoption:
+
+\begin{itemize}
+    \item \textbf{API Endpoints}: RESTful APIs for programmatic access to benchmark data, enabling integration with IDE plugins, CI/CD pipelines, and development tools
+    \item \textbf{Export Capabilities}: CSV and JSON export functionality for offline analysis and integration with other evaluation frameworks
+    \item \textbf{Custom Filtering}: Query models by performance thresholds, problem types, evaluation criteria, or specific use case requirements
+    \item \textbf{Real-time Updates}: Automatic refresh when new benchmark results become available, ensuring developers always access the latest evaluation data
+    \item \textbf{Integration Hooks}: Webhooks and callbacks for automated notifications when new models meet specified performance criteria
 \end{itemize}
 
 % \subsubsection{Configurable Data Pipeline}
 
-% The leaderboard supports flexible data ingestion with configurable directory structures:
+% The leaderboard supports flexible data ingestion with configurable directory structures for seamless integration with the evaluation framework:
 
 % \begin{lstlisting}[language=Python]
 % # Data directory configuration
@@ -300,18 +346,28 @@ The leaderboard provides real-time visualization of model performance across all
 % # File pattern matching for automatic discovery
 % LEADERBOARD_PATTERN = 'v2_*leaderboard*.csv'
 % RESULTS_PATTERN = 'v2_*results*.json'
+
+% # Automated data ingestion and processing
+% def load_benchmark_data():
+%     """Load and process benchmark results for web display"""
+%     # Implementation handles multiple evaluation runs
+%     # Automatic metric calculation and visualization
+%     pass
 % \end{lstlisting}
 
-\subsubsection{Developer Integration Features}
+\subsubsection{Real-World Impact and Adoption}
 
-The platform includes several features designed for developer workflows:
+The web UI implementation addresses key barriers to AI tool adoption in software development:
 
-\begin{itemize}
-    \item \textbf{API Endpoints}: RESTful APIs for programmatic access to benchmark data
-    \item \textbf{Export Capabilities}: CSV and JSON export for integration with other tools
-    \item \textbf{Custom Filtering}: Query models by performance thresholds, problem types, or evaluation criteria
-    \item \textbf{Real-time Updates}: Automatic refresh when new benchmark results become available
-\end{itemize}
+\begin{enumerate}
+    \item \textbf{Accessibility}: Removes the need for developers to understand complex evaluation methodologies
+    \item \textbf{Transparency}: Provides clear explanations of how evaluation metrics translate to practical development scenarios
+    \item \textbf{Comparability}: Enables apples-to-apples comparison of different AI coding assistants
+    \item \textbf{Actionability}: Transforms evaluation results into concrete recommendations for tool selection
+    \item \textbf{Continuous Improvement}: Supports ongoing evaluation as AI models evolve and new tools emerge
+\end{enumerate}
+
+This implementation represents a significant advancement in making AI evaluation frameworks accessible to practitioners, effectively bridging the gap between academic research and real-world software development needs.
 
 \subsubsection{Metric Equations and Calculations}
 
