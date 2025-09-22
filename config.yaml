@@ -1,0 +1,195 @@
+phase1_prompts:
+  prompt1: "You are an expert software developer who writes high quality code. With below information, please either generate Python3 code (Respond directly with code only with markdown), or ask clarifying questions: \n {problem}"
+  prompt2: "You are an expert software developer specialized in Python3. Review the problem description and: -If the description provides enough detail, proceed by writing the required Python3 code using markdown. OR - If further details are needed to ensure the solution is accurate and complete, please list any specific questions you have about the problem.\n ### Problem Description: \n {problem}"
+  prompt4: "You are an expert software developer who writes high quality code. With below information, please either generate Python3 code (Respond directly with code only with markdown, i.e. enclosed in ``` ), or ask clarifying questions. If you decide to generate code, only include markdown (```), with not additional comments, and NEVER generate explanation in this case. If you generate clarifying questions, do not generate code: \n{problem}"
+  prompt3_one_shot: |
+    You are an expert software developer specialized in Python3. In each turn, review the problem description and:
+    - If the description provides accurate detail, proceed by writing the required Python3 code using markdown.
+    OR
+    - If further details are needed to ensure the solution is accurate and complete, list clarifying questions about the problem without writing code.
+    ### Problem Description:
+
+    ```python
+    def candidate(x: int, y: int):
+    """
+    Return 2^n modulo p (be aware of numerics).
+    >>> candidate(3, 5)
+    3
+    >>> candidate(1101, 101)
+    2
+    >>> candidate(0, 101)
+    1
+    >>> candidate(3, 11)
+    8
+    >>> candidate(100, 101)
+    1
+    """
+    ```
+
+    ### Response:
+    The problem description seems to be incomplete. It provides a function signature and some test cases, but it doesn't specify what the function is supposed to do. The docstring suggests that the function should return 2^n modulo p, but the function parameters (x, y) don't match with the variables in the docstring (n, p).
+
+    Here are my questions to clarify the problem:
+    1. What are the roles of the parameters x and y in the function?
+    2. Should the function return 2^n modulo p as suggested in the docstring? If so, which parameter corresponds to n and which corresponds to p?
+    3. The test cases provided in the docstring don't seem to match the function description. Could you please provide correct test cases?
+
+    ### Problem Description:
+    {problem}
+
+    ### Response:
+
+phase2_prompts:
+  prompt1: "The original description of a coding problem is modified so that the requirements become inconsistent, incomplete, or ambiguous. Given the modified description, some clarifying questions were raised to clarify the description. Given the original and modified problem description, evaluate the quality of the clarifying questions. Please provide an integer representing the quality of questions (3: Good questions that recover the modified requirements; 2: Fair questions but they cannot help recover the modified requirements; 1: No questions).\n  QUALITY=[your int] \n Please also provide answers to the clarifying questions to recover the modified requirements in the original problem description compared to the modified one. If there is no clarifying questions at all, return empty answers. \n ANSWERS=```[your answer]```  \n Please strictly follow the format QUALITY=[the int] and ANSWERS=```[the answer]``` in the response! Surround your answer with markdown! \n\n ### Questions: {clarifying_questions} \n ### Modified Problem Description: {problem} \n ### Original Description: {missing_information} \n"
+  prompt2: "A MODIFIED version of a coding problem description was given to a coder. The coder has raised some clarifying questions about the problem description.  Given both the modified, and original version of the problem description, provide answers to the questions raised by the coder strictly following the format: ANSWERS=[your answer], then provide an integer representing the quality of questions (3: Good questions that help recover the modified requirements; 2: Fair questions but they cannot help recover the modified requirements; 1: No questions or completely irrelevant questions), to provide the quality of questions, strictly follow the format: QUALITY=[1, 2, or 3].\n\n ### Modified Problem Description: {problem} \n ### Original Description: {missing_information} \n ### Questions: {clarifying_questions}\n"
+  prompt3_one_shot: |
+    A MODIFIED version of a coding problem description was given to a coder. The coder has raised some clarifying questions about the problem description. Given both the modified, and original version of the problem description, provide answers to the questions raised by the coder strictly following the format: ANSWERS=[your answer], then provide an integer representing the quality of questions (3: Good questions that help recover the modified requirements; 2: Fair questions but they cannot help recover the modified requirements; 1: No questions or completely irrelevant questions), to provide the quality of questions, strictly follow the format: QUALITY=[1, 2, or 3].
+
+    Here is an example of sample input and output for you:
+    ### Sample input:
+    #### Modified Problem Description:
+    python def candidate(x: int, y: int):
+    """
+    Return 2^n modulo p (be aware of numerics).
+    >>> candidate(3, 5)
+    3
+    >>> candidate(1101, 101)
+    2
+    >>> candidate(0, 101)
+    1
+    >>> candidate(3, 11)
+    8
+    >>> candidate(100, 101)
+    1
+    """
+
+    #### Original Description:
+    python def modp(n: int, p: int):
+        """Return 2^n modulo p (be aware of numerics).
+        >>> modp(3, 5)
+        3
+        >>> modp(1101, 101)
+        2
+        >>> modp(0, 101)
+        1
+        >>> modp(3, 11)
+        8
+        >>> modp(100, 101)
+        1
+        """
+
+    #### Questions:
+    - Can you clarify the relationship between the function parameters 'x' and 'y' and the operation parameters "2^n modulo p" mentioned in the docstring?
+    - Are there any constraints on the input values for 'x' and 'y' that I should be aware of?
+    - The docstring mentions "be aware of numerics". Are there any specific numerical considerations or edge cases I should keep in mind while implementing this function?
+
+    ### Sample output:
+    ANSWERS=
+    - 'x' represents the exponent (n), and 'y' represents the modulus (p).
+    - There are no explicitly stated constraints on 'x' and 'y'.
+    - There is no extra information about the "be aware of numerics" note.
+
+    QUALITY= 3
+
+    ## Now give the output for the problem below:
+    ### Modified Problem Description: {problem}
+    ### Original Description: {missing_information}
+    ### Questions: {clarifying_questions}
+
+# V2 Evaluators Framework Configuration
+
+judge_models:
+  - name: "gemini-2.0-flash"
+    api_key: "${GEMINI_API_KEY}" # Replace with your Gemini API key
+    endpoint: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent"
+    model: "gemini-2.0-flash-exp"
+    max_tokens: 1000
+    temperature: 0.1
+    timeout: 30
+
+
+  # - name: "gpt-3.5-turbo"
+  #   api_key: "${OPENAI_API_KEY}"
+  #   endpoint: "https://api.openai.com/v1/chat/completions"
+  #   model: "gpt-3.5-turbo"
+  #   max_tokens: 1000
+  #   temperature: 0.1
+  #   timeout: 30
+
+  # - name: "claude-3-haiku"
+  #   api_key: "${ANTHROPIC_API_KEY}"
+  #   endpoint: "https://api.anthropic.com/v1/messages"
+  #   model: "claude-3-haiku-20240307"
+  #   max_tokens: 1000
+  #   temperature: 0.1
+  #   timeout: 30
+
+# Evaluation prompt for LLM judges
+evaluation_prompt: |
+  You are an expert code evaluator. Please evaluate the following generated code for correctness, efficiency, readability, and adherence to best practices.
+  
+  **Code to evaluate:**
+  ```python
+  {code}
+  ```
+  
+  **Problem description:**
+  {problem}
+  
+  **Expected behavior:**
+  {expected}
+  
+  Please provide your evaluation as a JSON response with the following structure:
+  {{
+    "score": <float between 0.0 and 10.0>,
+    "confidence": <float between 0.0 and 1.0>,
+    "rationale": "<string explaining your evaluation>"
+  }}
+
+# Sandbox configuration for V2 Evaluators
+sandbox:
+  use_docker: true
+  docker_image: "python:3.11-slim"
+  resource_limits:
+    cpu_time_limit: 30.0
+    memory_limit: 256
+    wallclock_limit: 60.0
+    disk_limit: 50
+  network_access: false
+  read_only_filesystem: true
+
+# Static analysis configuration
+static_analysis:
+  tools:
+    pylint:
+      enabled: true
+      max_score: 10.0
+      threshold: 7.0
+    bandit:
+      enabled: true
+      severity_level: "medium"
+    radon:
+      enabled: true
+      complexity_threshold: 10
+      maintainability_threshold: 70
+    mypy:
+      enabled: true
+      strict_mode: false
+      ignore_missing_imports: true
+
+# Calibration configuration
+calibration:
+  data_path: "calibration_data.json"
+  models_dir: "calibration_models"
+  methods: ["isotonic", "logistic"]
+  min_samples: 10
+  test_size: 0.2
+
+# Aggregation weights
+evaluation_weights:
+  correctness: 0.40
+  communication: 0.20
+  readability: 0.15
+  security: 0.10
+  efficiency: 0.10
+  maintainability: 0.05

@@ -1,0 +1,17 @@
+pytest
+hypothesis
+pylint
+bandit
+radon
+mypy
+black
+isort
+scikit-learn
+psutil
+requests
+streamlit   # optional: human annotation UI
+aiohttp
+docker
+pandas
+numpy
+pyyaml

@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HumanEvalComm V2 Enhanced Leaderboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+    :root {
+            /* Research-friendly minimal palette */
+            --color-white: #ffffff;
+            --color-gray-50: #f9fafb;
+            --color-gray-100: #f3f4f6;
+            --color-gray-200: #e5e7eb;
+            --color-gray-300: #d1d5db;
+            --color-gray-400: #9ca3af;
+            --color-gray-500: #6b7280;
+            --color-gray-600: #4b5563;
+            --color-gray-700: #374151;
+            --color-gray-800: #1f2937;
+            --color-gray-900: #111827;
+
+            /* Accent colors for data visualization */
+            --color-blue-500: #3b82f6;
+            --color-blue-600: #2563eb;
+            --color-blue-700: #1d4ed8;
+            --color-emerald-600: #059669;
+            --color-amber-600: #d97706;
+            --color-red-600: #dc2626;
+
+            /* Additional chart colors */
+            --color-cyan-600: #0891b2;
+            --color-purple-600: #7c3aed;
+            --color-indigo-600: #4f46e5;
+        }
+
+        /* Filters modern styling */
+        .filters-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,250,250,0.9));
+            border: 1px solid var(--color-gray-200);
+            border-radius: 12px;
+            padding: 12px 14px;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.03);
+        }
+
+        .filters-row { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+        .filters-col { display:flex; align-items:center; gap:8px; }
+        .filters-label { font-size:0.78rem; color:var(--color-gray-600); min-width:56px; }
+        .filters-select, .filters-input { min-width:160px; max-width:100%; }
+        .filters-actions { display:flex; gap:8px; align-items:center; }
+
+        /* Filters modern styling */
+        .filters-select {
+            background-color: var(--color-gray-100) !important;
+            border-color: var(--color-gray-300);
+            color: var(--color-gray-800);
+        }
+        .filters-select:focus {
+            background-color: var(--color-white) !important;
+            border-color: var(--color-blue-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Modern floating refresh button */
+        .refresh-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--color-blue-600);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .refresh-fab:hover {
+            background: var(--color-blue-700);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+            transform: scale(1.05);
+        }
+        .refresh-fab:active {
+            transform: scale(0.95);
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--color-gray-50);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: var(--color-gray-800);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .navbar {
+            background-color: white !important;
+            border-bottom: 1px solid var(--color-gray-200);
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            color: var(--color-slate-900) !important;
+            font-weight: 600;
+            font-size: 1.125rem;
+            letter-spacing: -0.025em;
+        }
+
+        .nav-link {
+            color: var(--color-slate-600) !important;
+            font-weight: 500;
+            transition: color 0.15s ease-in-out;
+        }
+
+        .nav-link:hover {
+            color: var(--color-slate-900) !important;
+        }
+
+        .nav-link.active {
+            color: var(--color-blue-600) !important;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            color: var(--color-slate-600) !important;
+            font-weight: 500;
+            transition: color 0.15s ease-in-out;
+        }
+
+        .nav-link:hover {
+            color: var(--color-slate-900) !important;
+        }
+
+        .container {
+            max-width: 1200px;
+        }
+
+        .metric-card {
+            background: var(--color-white);
+            border: 1px solid var(--color-gray-200);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.15s ease-in-out;
+            text-align: center;
+        }
+
+        .metric-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-icon {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+            color: var(--color-gray-600);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--color-gray-900);
+            line-height: 1;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-gray-700);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .metric-subtitle {
+            font-size: 0.8125rem;
+            color: var(--color-gray-500);
+            font-style: italic;
+        }
+
+        .card {
+            border: 1px solid var(--color-slate-200);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            margin-bottom: 32px;
+            background-color: white;
+            transition: box-shadow 0.15s ease-in-out;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-header {
+            background-color: var(--color-gray-100);
+            border-bottom: 1px solid var(--color-gray-200);
+            padding: 14px 18px;
+            border-radius: 8px 8px 0 0 !important;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        .table {
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table th {
+            background-color: var(--color-gray-100);
+            color: var(--color-gray-800);
+            border: 1px solid var(--color-gray-200);
+            font-weight: 700;
+            padding: 12px 10px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .table td {
+            vertical-align: middle;
+            border-color: var(--color-gray-200);
+            padding: 12px 10px;
+            color: var(--color-gray-700);
+            transition: background-color 0.12s ease-in-out;
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--color-slate-50);
+        }
+
+        .model-name {
+            font-weight: 600;
+            color: var(--color-slate-900);
+            font-size: 0.9375rem;
+        }
+
+        .score-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            border: 1px solid var(--color-gray-300);
+            display: inline-block;
+            background: var(--color-white);
+        }
+
+        .score-excellent {
+            color: var(--color-emerald-600);
+            border-color: var(--color-emerald-600);
+            background: var(--color-gray-50);
+        }
+
+        .score-good {
+            color: var(--color-blue-600);
+            border-color: var(--color-blue-600);
+            background: var(--color-gray-50);
+        }
+
+        .score-fair {
+            color: var(--color-amber-600);
+            border-color: var(--color-amber-600);
+            background: var(--color-gray-50);
+        }
+
+        .score-poor {
+            color: var(--color-red-600);
+            border-color: var(--color-red-600);
+            background: var(--color-gray-50);
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .chart-container {
+            background: var(--color-white);
+            border: 1px solid var(--color-gray-200);
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+        .chart-sm { height: 320px; }
+        .chart-lg { height: 480px; }
+
+        .chart-container h5 {
+            color: var(--color-gray-800);
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 16px;
+            transition: all 0.15s ease-in-out;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background-color: var(--color-blue-600);
+            border-color: var(--color-blue-600);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-blue-700);
+            border-color: var(--color-blue-700);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.25);
+        }
+
+        .btn-outline-secondary {
+            color: var(--color-slate-600);
+            border-color: var(--color-slate-300);
+            background-color: transparent;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--color-slate-50);
+            border-color: var(--color-slate-400);
+            color: var(--color-slate-700);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            color: var(--color-slate-900);
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        h5 {
+            font-size: 1.125rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--color-slate-700);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid var(--color-slate-300);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.875rem;
+            transition: all 0.15s ease-in-out;
+            background-color: white;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--color-blue-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+
+        .text-muted {
+            color: var(--color-slate-500) !important;
+        }
+
+        .card-title {
+            margin-bottom: 1.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .metric-value {
+                font-size: 2rem;
+            }
+
+            .metric-card {
+                padding: 20px;
+            }
+
+            .chart-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-trophy"></i> HumanEvalComm V2 Leaderboard
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link{% if request.endpoint == 'index' %} active{% endif %}" href="/">
+                    <i class="fas fa-home"></i> Main Leaderboard
+                </a>
+                <a class="nav-link{% if request.endpoint == 'detailed' %} active{% endif %}" href="/detailed">
+                    <i class="fas fa-chart-line"></i> Detailed Results
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Summary Statistics -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <div class="metric-value">{{ stats.total_models }}</div>
+                    <div class="metric-label">Total Models</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="metric-value">{{ "%.1f"|format(stats.avg_v2_score) }}</div>
+                    <div class="metric-label">Avg V2 Score</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="metric-value">{{ "%.0f"|format(stats.avg_comm_rate) }}%</div>
+                    <div class="metric-label">Comm Rate</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="metric-value">{{ "%.0f"|format(stats.avg_pass_at_1) }}%</div>
+                    <div class="metric-label">Pass@1</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters placeholder moved below charts -->
+
+        <div id="chartsArea">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5 class="mb-3"><i class="fas fa-chart-bar"></i> V2 Score Comparison</h5>
+                        <div id="v2-scores-chart" class="chart-sm"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5 class="mb-3"><i class="fas fa-comments"></i> Communication Metrics</h5>
+                        <div id="communication-chart" class="chart-sm"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5 class="mb-3"><i class="fas fa-radar-chart"></i> Performance Radar Chart</h5>
+                        <div id="performance-radar" class="chart-sm"></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5 class="mb-3"><i class="fas fa-chart-line"></i> Trustworthiness Metrics</h5>
+                        <div id="trustworthiness-chart" class="chart-sm"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="chart-container">
+                        <h5 class="mb-3"><i class="fas fa-heatmap"></i> Model Performance Heatmap</h5>
+                        <div id="performance-heatmap" class="chart-lg"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modern inline Filters & Sorting (placed after charts) -->
+        <div class="filters-card mb-4">
+            <form method="get" class="filters-row">
+                <div class="filters-col">
+                    <div class="filters-label">Model</div>
+                    <select name="model" id="model" class="form-select form-select-sm filters-select" aria-label="Filter by model">
+                        <option value="">All models</option>
+                        {% for model in models %}
+                        <option value="{{ model }}" {% if model == selected_model %}selected{% endif %}>{{ model }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filters-col">
+                    <div class="filters-label">Sort</div>
+                    <select name="sort_by" id="sort_by" class="form-select form-select-sm filters-select" aria-label="Sort by">
+                        {% for column in columns %}
+                        <option value="{{ column }}" {% if column == sort_by %}selected{% endif %}>{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filters-col">
+                    <div class="filters-label">Order</div>
+                    <select name="sort_order" id="sort_order" class="form-select form-select-sm filters-select" aria-label="Sort order">
+                        <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Desc</option>
+                        <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Asc</option>
+                    </select>
+                </div>
+
+                <div class="filters-actions ms-auto">
+                    <button type="submit" class="btn btn-primary btn-sm" aria-label="Apply filters">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                        <span class="visually-hidden">Apply</span>
+                    </button>
+                    <a href="/" class="btn btn-outline-secondary btn-sm" aria-label="Clear filters">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </a>
+                </div>
+
+                <div class="w-100 mt-2 text-muted small">
+                    Tip: Filter by model to focus on a single implementation. Use sorting to rank by V2 Score or other metrics.
+                </div>
+            </form>
+        </div>
+
+        <!-- Leaderboard Table -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-trophy"></i> V2 Enhanced Leaderboard</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                {% for column in columns %}
+                                <th>
+                                                <a href="?sort_by={{ column }}&sort_order={% if sort_by == column and sort_order == 'desc' %}asc{% else %}desc{% endif %}{% if selected_model %}&model={{ selected_model }}{% endif %}"
+                                                    class="text-decoration-none">
+                                        {{ column }}
+                                        {% if sort_by == column %}
+                                            <i class="fas fa-sort-{% if sort_order == 'desc' %}down{% else %}up{% endif %}"></i>
+                                        {% endif %}
+                                    </a>
+                                </th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for index, row in df.iterrows() %}
+                            <tr>
+                                <td class="model-name">{{ row['Model'] }}</td>
+                                {% for column in columns %}
+                                <td>
+                                    {% if column in ['Comm Rate', 'Good Q Rate', 'Pass@1', 'Test Pass'] %}
+                                        {% if row[column] >= 90 %}
+                                            <span class="score-badge score-excellent">{{ "%.0f"|format(row[column]) }}%</span>
+                                        {% elif row[column] >= 75 %}
+                                            <span class="score-badge score-good">{{ "%.0f"|format(row[column]) }}%</span>
+                                        {% elif row[column] >= 50 %}
+                                            <span class="score-badge score-fair">{{ "%.0f"|format(row[column]) }}%</span>
+                                        {% else %}
+                                            <span class="score-badge score-poor">{{ "%.0f"|format(row[column]) }}%</span>
+                                        {% endif %}
+                                    {% elif column in ['Readability', 'Security'] %}
+                                        {% if row[column] >= 90 %}
+                                            <span class="score-badge score-excellent">{{ "%.0f"|format(row[column]) }}</span>
+                                        {% elif row[column] >= 70 %}
+                                            <span class="score-badge score-good">{{ "%.0f"|format(row[column]) }}</span>
+                                        {% elif row[column] >= 50 %}
+                                            <span class="score-badge score-fair">{{ "%.0f"|format(row[column]) }}</span>
+                                        {% else %}
+                                            <span class="score-badge score-poor">{{ "%.0f"|format(row[column]) }}</span>
+                                        {% endif %}
+                                    {% elif column in ['Efficiency', 'Reliability'] %}
+                                        {% if row[column] >= 0.9 %}
+                                            <span class="score-badge score-excellent">{{ "%.2f"|format(row[column]) }}</span>
+                                        {% elif row[column] >= 0.7 %}
+                                            <span class="score-badge score-good">{{ "%.2f"|format(row[column]) }}</span>
+                                        {% elif row[column] >= 0.5 %}
+                                            <span class="score-badge score-fair">{{ "%.2f"|format(row[column]) }}</span>
+                                        {% else %}
+                                            <span class="score-badge score-poor">{{ "%.2f"|format(row[column]) }}</span>
+                                        {% endif %}
+                                    {% elif column == 'V2 Score' %}
+                                        {% if row[column] >= 8.5 %}
+                                            <span class="score-badge score-excellent">{{ "%.1f"|format(row[column]) }}</span>
+                                        {% elif row[column] >= 6.5 %}
+                                            <span class="score-badge score-good">{{ "%.1f"|format(row[column]) }}</span>
+                                        {% elif row[column] >= 4.5 %}
+                                            <span class="score-badge score-fair">{{ "%.1f"|format(row[column]) }}</span>
+                                        {% else %}
+                                            <span class="score-badge score-poor">{{ "%.1f"|format(row[column]) }}</span>
+                                        {% endif %}
+                                    {% else %}
+                                        {{ row[column] }}
+                                    {% endif %}
+                                </td>
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Information -->
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title"><i class="fas fa-info-circle"></i> Data Information</h6>
+                <p class="card-text">
+                    <strong>Latest Leaderboard:</strong> {{ files_info.latest_leaderboard.split('/')[-1] if files_info.latest_leaderboard else 'N/A' }}<br>
+                    <strong>Latest Results:</strong> {{ files_info.latest_results.split('/')[-1] if files_info.latest_results else 'N/A' }}<br>
+                    <strong>Last Updated:</strong> {{ stats.last_updated }}<br>
+                    <strong>Total Files:</strong> {{ files_info.leaderboard_files|length }} leaderboard files, {{ files_info.results_files|length }} result files
+                </p>
+            </div>
+        </div>
+
+        <!-- About & Reproducibility -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-book"></i> About HumanEvalComm V2</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h6>Overview</h6>
+                        <p class="text-muted">
+                            HumanEvalComm V2 is an enhanced evaluation framework for code generation models that extends the original HumanEval benchmark with communication-focused metrics and multi-dimensional assessment.
+                        </p>
+
+                        <h6>Key Features</h6>
+                        <ul class="text-muted">
+                            <li><strong>V2 Composite Score:</strong> Weighted combination of test performance, static analysis, and security metrics</li>
+                            <li><strong>Communication Metrics:</strong> Evaluates code clarity, documentation quality, and question-answering capabilities</li>
+                            <li><strong>Multi-LLM Judging:</strong> Consensus-based evaluation using multiple language models for reliability</li>
+                            <li><strong>Trustworthiness Assessment:</strong> Comprehensive analysis of code readability, security, efficiency, and reliability</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6>Reproducibility</h6>
+                        <div class="d-grid gap-2">
+                            <button id="exportCsvBtn" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-download me-2"></i>Export CSV
+                            </button>
+                            <a href="https://github.com/your-repo/humaneval-comm" class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener">
+                                <i class="fab fa-github me-2"></i>View Source Code
+                            </a>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="showReproducibilityInfo()">
+                                <i class="fas fa-flask me-2"></i>Reproduction Guide
+                            </button>
+                            <a href="/detailed" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-chart-line me-2"></i>Detailed Results
+                            </a>
+                        </div>
+
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <strong>Framework:</strong> Python/Flask<br>
+                                <strong>Data Format:</strong> JSON/CSV<br>
+                                <strong>License:</strong> MIT
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modern floating refresh button -->
+    <button class="refresh-fab" title="Refresh Data">
+        <i class="fas fa-sync-alt"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Wire UI controls when page loads. Charts load only when the toggle is enabled.
+        document.addEventListener('DOMContentLoaded', function() {
+            // Export CSV
+            const exportBtn = document.getElementById('exportCsvBtn');
+            if (exportBtn) exportBtn.addEventListener('click', downloadCSV);
+
+            // Refresh FAB
+            const refreshFab = document.querySelector('.refresh-fab');
+            if (refreshFab) refreshFab.addEventListener('click', refreshData);
+
+            // Charts are visible by default on the index page; load them now
+            try { loadCharts(); } catch (e) { console.error('Failed to load charts on DOMContentLoaded', e); }
+        });
+
+        function loadCharts() {
+            fetch('/api/charts')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Error loading charts:', data.error);
+                        return;
+                    }
+                    
+                    // Modern color palette matching CSS vars
+                    const modernColors = {
+                        primary: '#2563eb',    // blue-600
+                        secondary: '#059669',  // emerald-600
+                        accent: '#d97706',     // amber-600
+                        danger: '#dc2626',     // red-600
+                        cyan: '#0891b2',       // cyan-600
+                        purple: '#7c3aed'      // purple-600
+                    };
+                    
+                    // Common layout config for modern look
+                    const commonLayout = {
+                        font: { family: '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif', size: 12 },
+                        margin: { t: 60, b: 60, l: 60, r: 60 },
+                        paper_bgcolor: 'rgba(255,255,255,0.8)',
+                        plot_bgcolor: 'rgba(255,255,255,0.8)',
+                        showlegend: true,
+                        legend: { orientation: 'h', y: -0.2 }
+                    };
+                    
+                    // V2 Scores Chart - Modern bar with gradient effect
+                    if (data.v2_scores && data.v2_scores.x.length > 0) {
+                        const v2ScoresTrace = {
+                            x: data.v2_scores.x,
+                            y: data.v2_scores.y,
+                            type: 'bar',
+                            marker: {
+                                color: modernColors.primary,
+                                line: { width: 0 },
+                                opacity: 0.8
+                            },
+                            text: data.v2_scores.y.map(y => y.toFixed(1)),
+                            textposition: 'auto',
+                            textfont: { color: '#ffffff', size: 11 },
+                            hovertemplate: '<b>%{x}</b><br>V2 Score: %{y:.1f}<extra></extra>'
+                        };
+                        
+                        const v2ScoresLayout = {
+                            ...commonLayout,
+                            title: { text: '<b>V2 Score Comparison</b>', font: { size: 16 } },
+                            xaxis: { title: { text: 'Models', font: { size: 14 } } },
+                            yaxis: { title: { text: 'V2 Score', font: { size: 14 } } }
+                        };
+                        
+                        Plotly.newPlot('v2-scores-chart', [v2ScoresTrace], v2ScoresLayout, {responsive: true});
+                    }
+                    
+                    // Communication Chart - Enhanced grouped bars
+                    if (data.communication && data.communication.models.length > 0) {
+                        const commTrace = {
+                            x: data.communication.models,
+                            y: data.communication.comm_rate,
+                            type: 'bar',
+                            name: 'Communication Rate',
+                            marker: { color: modernColors.secondary, opacity: 0.8 },
+                            hovertemplate: '<b>%{x}</b><br>Comm Rate: %{y:.0f}%<extra></extra>'
+                        };
+
+                        const goodQTrace = {
+                            x: data.communication.models,
+                            y: data.communication.good_q_rate,
+                            type: 'bar',
+                            name: 'Good Q Rate',
+                            marker: { color: modernColors.cyan, opacity: 0.8 },
+                            hovertemplate: '<b>%{x}</b><br>Good Q Rate: %{y:.0f}%<extra></extra>'
+                        };
+                        
+                        const commLayout = {
+                            ...commonLayout,
+                            title: { text: '<b>Communication Metrics</b>', font: { size: 16 } },
+                            xaxis: { title: { text: 'Models', font: { size: 14 } } },
+                            yaxis: { title: { text: 'Percentage (%)', font: { size: 14 } } },
+                            barmode: 'group'
+                        };
+                        
+                        Plotly.newPlot('communication-chart', [commTrace, goodQTrace], commLayout, {responsive: true});
+                    }
+
+                    // Performance Radar Chart - Modern polar with custom colors
+                    if (data.performance_radar && data.performance_radar.models.length > 0) {
+                        const radarColors = [modernColors.primary, modernColors.secondary, modernColors.accent, modernColors.danger];
+                        const radarData = [];
+                        data.performance_radar.models.forEach((model, index) => {
+                            radarData.push({
+                                type: 'scatterpolar',
+                                r: data.performance_radar.values[index],
+                                theta: data.performance_radar.metrics,
+                                fill: 'toself',
+                                name: model,
+                                mode: 'lines+markers',
+                                line: { color: radarColors[index % radarColors.length], width: 3 },
+                                marker: { color: radarColors[index % radarColors.length], size: 8, symbol: 'circle' },
+                                hovertemplate: '<b>%{theta}</b><br>%{fullData.name}: %{r}<extra></extra>'
+                            });
+                        });
+
+                        const radarLayout = {
+                            ...commonLayout,
+                            polar: {
+                                radialaxis: {
+                                    visible: true,
+                                    range: [0, 100],
+                                    tickfont: { size: 10 }
+                                },
+                                angularaxis: {
+                                    tickfont: { size: 11 }
+                                }
+                            },
+                            showlegend: true,
+                            title: { text: '<b>Performance Radar Chart</b>', font: { size: 16 } }
+                        };
+
+                        Plotly.newPlot('performance-radar', radarData, radarLayout, {responsive: true});
+                    }
+
+                    // Trustworthiness Chart - Modern grouped bars with better colors
+                    if (data.trustworthiness && Object.keys(data.trustworthiness).length > 1) {
+                        const trustData = [];
+                        const trustMetrics = ['Readability', 'Security', 'Efficiency', 'Reliability'];
+                        const trustColors = [modernColors.primary, modernColors.secondary, modernColors.accent, modernColors.purple];
+
+                        trustMetrics.forEach((metric, index) => {
+                            if (data.trustworthiness[metric]) {
+                                trustData.push({
+                                    x: data.trustworthiness.models,
+                                    y: data.trustworthiness[metric],
+                                    type: 'bar',
+                                    name: metric,
+                                    marker: { color: trustColors[index % trustColors.length], opacity: 0.8 },
+                                    hovertemplate: '<b>%{x}</b><br>' + metric + ': %{y}<extra></extra>'
+                                });
+                            }
+                        });
+
+                        const trustLayout = {
+                            ...commonLayout,
+                            title: { text: '<b>Trustworthiness Metrics</b>', font: { size: 16 } },
+                            barmode: 'group',
+                            xaxis: { title: { text: 'Models', font: { size: 14 } } },
+                            yaxis: { title: { text: 'Score', font: { size: 14 } } }
+                        };
+
+                        Plotly.newPlot('trustworthiness-chart', trustData, trustLayout, {responsive: true});
+                    }
+
+                    // Performance Heatmap - Modern with custom colorscale
+                    if (data.heatmap && data.heatmap.x.length > 0) {
+                        const heatmapData = [{
+                            z: data.heatmap.z,
+                            x: data.heatmap.x,
+                            y: data.heatmap.y,
+                            type: 'heatmap',
+                            colorscale: [
+                                [0, '#f1f5f9'],      // Very light gray
+                                [0.25, '#e2e8f0'],   // Light blue-gray
+                                [0.5, '#cbd5e1'],    // Medium gray
+                                [0.75, modernColors.primary], // Blue
+                                [1, modernColors.secondary]   // Emerald
+                            ],
+                            showscale: true,
+                            hovertemplate: '<b>%{y}</b><br>%{x}: %{z}<extra></extra>',
+                            zmin: 0,
+                            zmax: 100
+                        }];
+
+                        const heatmapLayout = {
+                            ...commonLayout,
+                            title: { text: '<b>Model Performance Heatmap</b>', font: { size: 16 } },
+                            xaxis: { title: { text: 'Metrics', font: { size: 14 } } },
+                            yaxis: { title: { text: 'Models', font: { size: 14 } } }
+                        };
+
+                        Plotly.newPlot('performance-heatmap', heatmapData, heatmapLayout, {responsive: true});
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading charts:', error);
+                });
+        }
+
+        function refreshData() {
+            // show spinner on refresh FAB icon
+            const refreshIcon = document.querySelector('.refresh-fab i');
+            if (refreshIcon) refreshIcon.classList.add('fa-spin');
+            fetch('/refresh')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        location.reload();
+                    } else {
+                        alert('Error refreshing data: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error refreshing data:', error);
+                    alert('Error refreshing data');
+                })
+                .finally(() => {
+                    if (refreshIcon) refreshIcon.classList.remove('fa-spin');
+                });
+        }
+
+        // Export current leaderboard as CSV by calling the server API
+        function downloadCSV() {
+            fetch('/api/data')
+                .then(response => response.json())
+                .then(json => {
+                    if (!json.data) {
+                        alert('No data available for export');
+                        return;
+                    }
+
+                    // Build CSV
+                    const rows = json.data;
+                    if (!rows.length) {
+                        alert('No rows to export');
+                        return;
+                    }
+
+                    const cols = Object.keys(rows[0]);
+                    const csvLines = [cols.join(',')];
+                    rows.forEach(r => {
+                        const vals = cols.map(c => {
+                            const v = r[c] === null || r[c] === undefined ? '' : String(r[c]);
+                            // Escape quotes
+                            return '"' + v.replace(/"/g, '""') + '"';
+                        });
+                        csvLines.push(vals.join(','));
+                    });
+
+                    const csvContent = csvLines.join('\n');
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'leaderboard_export.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                })
+                .catch(err => {
+                    console.error('Error exporting CSV', err);
+                    alert('Error exporting CSV');
+                });
+        }
+
+        // Show reproducibility information modal
+        function showReproducibilityInfo() {
+            const modalHtml = `
+                <div class="modal fade" id="reproducibilityModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title"><i class="fas fa-flask me-2"></i>Reproducibility Guide</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h6>Environment Setup</h6>
+                                <pre class="bg-light p-3 rounded"><code># Clone the repository
+git clone https://github.com/your-repo/humaneval-comm.git
+cd humaneval-comm
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\\Scripts\\activate
+
+# Install dependencies
+pip install -r requirements.txt</code></pre>
+
+                                <h6>Running Evaluations</h6>
+                                <pre class="bg-light p-3 rounded"><code># Run the evaluation framework
+python evaluate_code.py --model your_model --dataset humaneval
+
+# Generate leaderboard
+python generate_response.py --input results.json --output leaderboard.csv</code></pre>
+
+                                <h6>Data Format</h6>
+                                <ul>
+                                    <li><strong>Results:</strong> JSON files with evaluation outcomes</li>
+                                    <li><strong>Leaderboard:</strong> CSV files with aggregated metrics</li>
+                                    <li><strong>V2 Scores:</strong> Composite metric combining multiple dimensions</li>
+                                </ul>
+
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    For detailed documentation, please refer to the README files in the repository.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Remove existing modal if present
+            const existingModal = document.getElementById('reproducibilityModal');
+            if (existingModal) existingModal.remove();
+
+            // Add modal to body and show
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            new bootstrap.Modal(document.getElementById('reproducibilityModal')).show();
+        }
+    </script>
+</body>
+</html>

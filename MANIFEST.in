@@ -1,0 +1,12 @@
+include README.md
+include LICENSE
+include requirements_v2.txt
+include config.yaml
+include .env.template
+include .gitignore
+recursive-include data *
+recursive-include docs *
+recursive-include examples *
+global-exclude *.pyc
+global-exclude __pycache__
+global-exclude .DS_Store

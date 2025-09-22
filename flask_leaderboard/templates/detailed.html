@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HumanEvalComm V2 Detailed Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Research-friendly minimal palette */
+            --color-white: #ffffff;
+            --color-gray-50: #f9fafb;
+            --color-gray-100: #f3f4f6;
+            --color-gray-200: #e5e7eb;
+            --color-gray-300: #d1d5db;
+            --color-gray-400: #9ca3af;
+            --color-gray-500: #6b7280;
+            --color-gray-600: #4b5563;
+            --color-gray-700: #374151;
+            --color-gray-800: #1f2937;
+            --color-gray-900: #111827;
+
+            /* Accent colors for data visualization */
+            --color-blue-500: #3b82f6;
+            --color-blue-600: #2563eb;
+            --color-blue-700: #1d4ed8;
+            --color-emerald-600: #059669;
+            --color-amber-600: #d97706;
+            --color-red-600: #dc2626;
+
+            /* Additional chart colors */
+            --color-cyan-600: #0891b2;
+            --color-purple-600: #7c3aed;
+            --color-indigo-600: #4f46e5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--color-gray-50);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--color-gray-800);
+            line-height: 1.5;
+        }
+
+        .header {
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .lead {
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+            color: var(--color-gray-600);
+        }
+
+        .navbar {
+            background-color: white !important;
+            border-bottom: 1px solid var(--color-gray-200);
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            color: var(--color-slate-900) !important;
+            font-weight: 600;
+            font-size: 1.125rem;
+            letter-spacing: -0.025em;
+        }
+
+        .nav-link {
+            color: var(--color-slate-600) !important;
+            font-weight: 500;
+            transition: color 0.15s ease-in-out;
+        }
+
+        .nav-link:hover {
+            color: var(--color-slate-900) !important;
+        }
+
+        .nav-link.active {
+            color: var(--color-blue-600) !important;
+            font-weight: 600;
+        }
+
+        .container { max-width: 1100px; }
+
+        .card { border: 1px solid var(--color-gray-200); border-radius: 8px; background: var(--color-white); margin-bottom: 16px; }
+
+        .card-header { background-color: var(--color-gray-100); padding: 12px 16px; border-bottom: 1px solid var(--color-gray-200); }
+        .card-body { padding: 16px; }
+
+        .table {
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table th { background-color: var(--color-gray-100); color: var(--color-gray-800); border: 1px solid var(--color-gray-200); font-weight: 700; padding: 10px 12px; font-size: 0.85rem; }
+
+        .table td { vertical-align: middle; border-color: var(--color-gray-200); padding: 10px 12px; color: var(--color-gray-700); }
+        .table tbody tr:hover { background-color: var(--color-gray-50); }
+
+        .status-badge { padding: 6px 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; display: inline-block; }
+        .status-excellent { color: #065f46; background: #ecfdf5; border: 1px solid #bbf7d0; }
+        .status-poor { color: #7f1d1d; background: #fff1f2; border: 1px solid #fecaca; }
+        .status-question { color: #1e3a8a; background: #eef2ff; border: 1px solid #c7d2fe; }
+
+        .btn {
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 16px;
+            transition: all 0.15s ease-in-out;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background-color: var(--color-blue-600);
+            border-color: var(--color-blue-600);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-blue-700);
+            border-color: var(--color-blue-700);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-secondary {
+            color: var(--color-slate-600);
+            border-color: var(--color-slate-300);
+            background-color: transparent;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--color-slate-50);
+            border-color: var(--color-slate-400);
+            color: var(--color-slate-700);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            color: var(--color-slate-900);
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--color-slate-700);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid var(--color-slate-300);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.875rem;
+            transition: all 0.15s ease-in-out;
+            background-color: white;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--color-blue-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+
+        .text-muted {
+            color: var(--color-slate-500) !important;
+        }
+
+        .card-title {
+            margin-bottom: 1.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        /* Research Modal Enhancements */
+        .research-modal .modal-dialog {
+            max-width: 95vw;
+            height: 90vh;
+        }
+        .research-modal .modal-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .research-modal .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+        }
+
+        /* Summary Header */
+        .summary-header {
+            background: var(--color-gray-50);
+            padding: 20px;
+            border-bottom: 1px solid var(--color-gray-200);
+        }
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat-box {
+            text-align: center;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--color-gray-200);
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-blue-600);
+            display: block;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--color-gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Tab Navigation */
+        .nav-tabs {
+            border-bottom: 2px solid var(--color-gray-200);
+            background: var(--color-gray-50);
+            padding: 0 20px;
+        }
+        .nav-tabs .nav-link {
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--color-gray-600);
+            font-weight: 500;
+            padding: 12px 20px;
+            transition: all 0.2s ease;
+        }
+        .nav-tabs .nav-link:hover {
+            color: var(--color-blue-600);
+            background: transparent;
+        }
+        .nav-tabs .nav-link.active {
+            color: var(--color-blue-600);
+            border-bottom-color: var(--color-blue-600);
+            background: white;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            padding: 20px;
+        }
+        .tab-pane {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Cards */
+        .section-card {
+            margin-bottom: 20px;
+            border: 1px solid var(--color-gray-200);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .section-header {
+            background: var(--color-gray-100);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--color-gray-200);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-header h6 {
+            margin: 0;
+            font-weight: 600;
+            color: var(--color-gray-800);
+        }
+        .section-body {
+            padding: 16px;
+        }
+
+        /* Code Display */
+        .code-display {
+            background: var(--color-gray-900);
+            color: var(--color-gray-100);
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .metric-card {
+            background: white;
+            border: 1px solid var(--color-gray-200);
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .metric-title {
+            font-weight: 600;
+            color: var(--color-gray-800);
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .metric-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-blue-600);
+        }
+        .metric-subtext {
+            font-size: 0.75rem;
+            color: var(--color-gray-500);
+            margin-top: 4px;
+        }
+
+        /* Status Indicators */
+        .status-badge-research {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-success { background: #dcfce7; color: #166534; }
+        .status-error { background: #fef2f2; color: #991b1b; }
+        .status-question { background: #fef3c7; color: #92400e; }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* Problem Statement */
+        .problem-statement {
+            background: var(--color-gray-50);
+            border-left: 4px solid var(--color-blue-500);
+            padding: 16px;
+            border-radius: 0 6px 6px 0;
+        }
+
+        /* Filters modern styling */
+        .filters-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,250,250,0.9));
+            border: 1px solid var(--color-gray-200);
+            border-radius: 12px;
+            padding: 12px 14px;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.03);
+        }
+
+        .filters-row { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+        .filters-col { display:flex; align-items:center; gap:8px; }
+        .filters-label { font-size:0.78rem; color:var(--color-gray-600); min-width:56px; }
+        .filters-select, .filters-input { min-width:160px; max-width:100%; }
+        .filters-actions { display:flex; gap:8px; align-items:center; }
+
+        .filters-select {
+            background-color: var(--color-gray-100) !important;
+            border-color: var(--color-gray-300);
+            color: var(--color-gray-800);
+        }
+        .filters-select:focus {
+            background-color: var(--color-white) !important;
+            border-color: var(--color-blue-500);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-trophy"></i> HumanEvalComm V2 Leaderboard
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link{% if request.endpoint == 'index' %} active{% endif %}" href="/">
+                    <i class="fas fa-home"></i> Main Leaderboard
+                </a>
+                <a class="nav-link{% if request.endpoint == 'detailed' %} active{% endif %}" href="/detailed">
+                    <i class="fas fa-chart-line"></i> Detailed Results
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Modern Header -->
+    <div class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <h1><i class="fas fa-chart-line me-3"></i>Comprehensive HumanEvalComm V2 Evaluation Insights</h1>
+                    <p class="lead">Explore individual problem evaluations, performance metrics, and detailed analysis</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Modern inline Filters & Sorting (placed after header) -->
+        <div class="filters-card mb-4">
+            <form method="get" class="filters-row">
+                <div class="filters-col">
+                    <div class="filters-label">Model</div>
+                    <select name="model" id="model" class="form-select form-select-sm filters-select" aria-label="Filter by model">
+                        <option value="">All Models</option>
+                        {% for model in models %}
+                        <option value="{{ model }}" {% if model == selected_model %}selected{% endif %}>{{ model }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filters-col">
+                    <div class="filters-label">Problem</div>
+                    <select name="problem" id="problem" class="form-select form-select-sm filters-select" aria-label="Filter by problem">
+                        <option value="">All Problems</option>
+                        {% for problem in problems %}
+                        <option value="{{ problem }}" {% if problem == selected_problem %}selected{% endif %}>{{ problem }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filters-actions ms-auto">
+                    <button type="submit" class="btn btn-primary btn-sm" aria-label="Apply filters">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                        <span class="visually-hidden">Apply</span>
+                    </button>
+                    <a href="/detailed" class="btn btn-outline-secondary btn-sm" aria-label="Clear filters">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </a>
+                </div>
+
+                <div class="w-100 mt-2 text-muted small">
+                    Tip: Filter by model or problem to focus on specific evaluations.
+                </div>
+            </form>
+        </div>
+
+        <!-- Enhanced Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-list-check fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="card-title mb-2">{{ df|length }}</h5>
+                        <p class="card-text text-muted small">Total Evaluations</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-check-circle fa-2x text-success"></i>
+                        </div>
+                        <h5 class="card-title mb-2">{{ df[df['execution_success'] == True]|length if 'execution_success' in df else 0 }}</h5>
+                        <p class="card-text text-muted small">Successful Executions</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-question-circle fa-2x text-info"></i>
+                        </div>
+                        <h5 class="card-title mb-2">{{ df[df['is_question'] == True]|length if 'is_question' in df else 0 }}</h5>
+                        <p class="card-text text-muted small">Question-Based</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-brain fa-2x text-warning"></i>
+                        </div>
+                        <h5 class="card-title mb-2">{{ models|length }}</h5>
+                        <p class="card-text text-muted small">Models Evaluated</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Table -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-list"></i> Evaluation Results</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Problem</th>
+                                <th>Model</th>
+                                <th>Prompt</th>
+                                <th>Status</th>
+                                <th>V2 Score</th>
+                                <th>Test Pass</th>
+                                <th>LLM Judge</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for index, row in df.iterrows() %}
+                            <tr>
+                                <td><strong>{{ row['problem_id'] }}</strong></td>
+                                <td>{{ row['model_name'] }}</td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ row['prompt_type'] }}</span>
+                                </td>
+                                <td>
+                                    {% if row['is_question'] %}
+                                        <span class="status-badge status-question">Question</span>
+                                    {% elif row['execution_success'] %}
+                                        <span class="status-badge status-excellent">Success</span>
+                                    {% else %}
+                                        <span class="status-badge status-poor">Error</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <strong>{{ "%.1f"|format(row['v2_weighted_score']) }}</strong>
+                                </td>
+                                <td>
+                                    <strong>{{ "%.0f"|format(row['test_pass_rate']) }}%</strong>
+                                </td>
+                                <td>
+                                    {% if row['judge_count'] > 0 %}
+                                        <strong>{{ "%.1f"|format(row['llm_consensus_score']) }}/10</strong>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary details-btn" data-index="{{ index }}" title="View Details">
+                                        <i class="fas fa-eye"></i> Details
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Source Info -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h6 class="mb-2"><i class="fas fa-database text-primary me-2"></i>Data Source</h6>
+                        <p class="mb-0 text-muted">
+                            Latest Results: <strong>{{ files_info.latest_results.split('/')[-1] if files_info.latest_results else 'N/A' }}</strong><br>
+                            Last Updated: <strong>{{ last_updated }}</strong>
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a href="/" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Leaderboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Modal for Details -->
+    <div class="modal fade research-modal" id="detailsModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-microscope me-2"></i>
+                        <span id="modalTitle">Research Analysis: Problem Evaluation</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" title="Close"></button>
+                </div>
+                <div class="modal-body" id="detailsModalBody">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Embed results as JSON to avoid JS quoting issues -->
+    <script id="results-data" type="application/json">{{ df.to_dict(orient='records') | tojson }}</script>
+
+    <!-- Embed problems data for question display -->
+    <script id="problems-data" type="application/json">{{ problems_data | tojson if problems_data else '{}' }}</script>
+
+    <script>
+        // Store results data for modal display (read from the embedded script tag)
+        const resultsData = JSON.parse(document.getElementById('results-data').textContent || '[]');
+        const problemsData = JSON.parse(document.getElementById('problems-data').textContent || '{}');
+
+        function showDetails(index) {
+            const result = resultsData[index];
+            const modalBody = document.getElementById('detailsModalBody');
+            const modalTitle = document.getElementById('modalTitle');
+
+            // Update modal title
+            modalTitle.textContent = `Research Analysis: ${result.problem_id} - ${result.model_name}`;
+
+            // Determine status and styling
+            let statusClass = 'status-question';
+            let statusText = 'Question-Based';
+            let statusIcon = 'fas fa-question-circle';
+            if (result.execution_success) {
+                statusClass = 'status-success';
+                statusText = 'Execution Success';
+                statusIcon = 'fas fa-check-circle';
+            } else if (result.error_message) {
+                statusClass = 'status-error';
+                statusText = 'Execution Failed';
+                statusIcon = 'fas fa-times-circle';
+            }
+
+            // Get problem data
+            const problemData = problemsData[result.problem_id] || {};
+            const problemPrompt = problemData.prompt || 'Problem data not available';
+
+            modalBody.innerHTML = `
+                <!-- Summary Header -->
+                <div class="summary-header">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h4 class="mb-1">${result.problem_id}</h4>
+                            <p class="mb-0 text-muted">${result.model_name} • ${result.prompt_type}</p>
+                        </div>
+                        <span class="status-badge-research ${statusClass}">
+                            <i class="${statusIcon}"></i>${statusText}
+                        </span>
+                    </div>
+                    <div class="summary-stats">
+                        <div class="stat-box">
+                            <span class="stat-value">${result.v2_weighted_score.toFixed(1)}</span>
+                            <span class="stat-label">V2 Score</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-value">${result.test_pass_rate.toFixed(0)}%</span>
+                            <span class="stat-label">Pass Rate</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-value">${result.llm_consensus_score.toFixed(1)}/10</span>
+                            <span class="stat-label">LLM Judge</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-value">${result.execution_time.toFixed(2)}s</span>
+                            <span class="stat-label">Exec Time</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation -->
+                <ul class="nav nav-tabs" id="detailsTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+                            <i class="fas fa-chart-pie me-2"></i>Overview
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="code-tab" data-bs-toggle="tab" data-bs-target="#code" type="button" role="tab">
+                            <i class="fas fa-code me-2"></i>Code Analysis
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="metrics-tab" data-bs-toggle="tab" data-bs-target="#metrics" type="button" role="tab">
+                            <i class="fas fa-chart-bar me-2"></i>Metrics
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="technical-tab" data-bs-toggle="tab" data-bs-target="#technical" type="button" role="tab">
+                            <i class="fas fa-cogs me-2"></i>Technical
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div class="tab-content" id="detailsTabContent">
+                    <!-- Overview Tab -->
+                    <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                        <div class="two-column">
+                            <div>
+                                <div class="section-card">
+                                    <div class="section-header">
+                                        <i class="fas fa-question-circle"></i>
+                                        <h6>Problem Statement</h6>
+                                    </div>
+                                    <div class="section-body">
+                                        <div class="problem-statement">
+                                            <pre style="margin: 0; white-space: pre-wrap; font-family: inherit; background: transparent; border: none; padding: 0;">${escapeHtml(problemPrompt)}</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="section-card">
+                                    <div class="section-header">
+                                        <i class="fas fa-trophy"></i>
+                                        <h6>Performance Summary</h6>
+                                    </div>
+                                    <div class="section-body">
+                                        <div class="metrics-grid">
+                                            <div class="metric-card">
+                                                <div class="metric-title">Composite Score</div>
+                                                <div class="metric-value">${result.v2_weighted_score.toFixed(1)}</div>
+                                                <div class="metric-subtext">Weighted evaluation score</div>
+                                            </div>
+                                            <div class="metric-card">
+                                                <div class="metric-title">Test Pass Rate</div>
+                                                <div class="metric-value">${result.test_pass_rate.toFixed(0)}%</div>
+                                                <div class="metric-subtext">Unit test success rate</div>
+                                            </div>
+                                            <div class="metric-card">
+                                                <div class="metric-title">LLM Consensus</div>
+                                                <div class="metric-value">${result.llm_consensus_score.toFixed(1)}/10</div>
+                                                <div class="metric-subtext">${result.judge_count} judge evaluations</div>
+                                            </div>
+                                            <div class="metric-card">
+                                                <div class="metric-title">Execution Status</div>
+                                                <div class="metric-value">
+                                                    <span class="status-badge-research ${statusClass}">
+                                                        <i class="${statusIcon}"></i>${statusText}
+                                                    </span>
+                                                </div>
+                                                <div class="metric-subtext">Code execution result</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Code Analysis Tab -->
+                    <div class="tab-pane fade" id="code" role="tabpanel">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <i class="fas fa-robot"></i>
+                                <h6>Model Response</h6>
+                            </div>
+                            <div class="section-body">
+                                <div class="code-display">${escapeHtml(result.raw_response || 'No response available')}</div>
+                            </div>
+                        </div>
+
+                        ${result.extracted_code && result.extracted_code !== result.raw_response ? `
+                        <div class="section-card">
+                            <div class="section-header">
+                                <i class="fas fa-code"></i>
+                                <h6>Extracted Code</h6>
+                            </div>
+                            <div class="section-body">
+                                <div class="code-display">${escapeHtml(result.extracted_code)}</div>
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <!-- Metrics Tab -->
+                    <div class="tab-pane fade" id="metrics" role="tabpanel">
+                        <div class="two-column">
+                            <div class="section-card">
+                                <div class="section-header">
+                                    <i class="fas fa-chart-line"></i>
+                                    <h6>V2 Evaluation Components</h6>
+                                </div>
+                                <div class="section-body">
+                                    <div class="metrics-grid">
+                                        <div class="metric-card">
+                                            <div class="metric-title">Composite Score</div>
+                                            <div class="metric-value">${result.v2_weighted_score.toFixed(1)}</div>
+                                        </div>
+                                        <div class="metric-card">
+                                            <div class="metric-title">Test Pass Rate</div>
+                                            <div class="metric-value">${result.test_pass_rate.toFixed(0)}%</div>
+                                        </div>
+                                        <div class="metric-card">
+                                            <div class="metric-title">Static Analysis</div>
+                                            <div class="metric-value">${result.static_analysis_score.toFixed(1)}</div>
+                                        </div>
+                                        <div class="metric-card">
+                                            <div class="metric-title">Security Score</div>
+                                            <div class="metric-value">${result.security_score.toFixed(1)}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section-card">
+                                <div class="section-header">
+                                    <i class="fas fa-gavel"></i>
+                                    <h6>Multi-LLM Judge Analysis</h6>
+                                </div>
+                                <div class="section-body">
+                                    <div class="metrics-grid">
+                                        <div class="metric-card">
+                                            <div class="metric-title">Consensus Score</div>
+                                            <div class="metric-value">${result.llm_consensus_score.toFixed(1)}/10</div>
+                                        </div>
+                                        <div class="metric-card">
+                                            <div class="metric-title">Judge Count</div>
+                                            <div class="metric-value">${result.judge_count}</div>
+                                        </div>
+                                        <div class="metric-card">
+                                            <div class="metric-title">Confidence</div>
+                                            <div class="metric-value">${(result.llm_mean_confidence * 100).toFixed(0)}%</div>
+                                        </div>
+                                        <div class="metric-card">
+                                            <div class="metric-title">Evaluation Method</div>
+                                            <div class="metric-value">Multi-Judge</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Technical Tab -->
+                    <div class="tab-pane fade" id="technical" role="tabpanel">
+                        <div class="two-column">
+                            <div class="section-card">
+                                <div class="section-header">
+                                    <i class="fas fa-cogs"></i>
+                                    <h6>Execution Details</h6>
+                                </div>
+                                <div class="section-body">
+                                    <div class="metrics-grid">
+                                        <div class="metric-card">
+                                            <div class="metric-title">Execution Time</div>
+                                            <div class="metric-value">${result.execution_time.toFixed(3)}s</div>
+                                        </div>
+                                        <div class="metric-card">
+                                            <div class="metric-title">Memory Usage</div>
+                                            <div class="metric-value">${result.memory_usage.toFixed(2)} MB</div>
+                                        </div>
+                                        <div class="metric-card">
+                                            <div class="metric-title">Formula Used</div>
+                                            <div class="metric-value">${result.formula_used}</div>
+                                        </div>
+                                        <div class="metric-card">
+                                            <div class="metric-title">Prompt Type</div>
+                                            <div class="metric-value">${result.prompt_type}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section-card">
+                                <div class="section-header">
+                                    <i class="fas fa-tag"></i>
+                                    <h6>Metadata</h6>
+                                </div>
+                                <div class="section-body">
+                                    <div class="metrics-grid">
+                                        <div class="metric-card">
+                                            <div class="metric-title">Problem ID</div>
+                                            <div class="metric-value">${result.problem_id}</div>
+                                        </div>
+                                        <div class="metric-card">
+                                            <div class="metric-title">Model</div>
+                                            <div class="metric-value">${result.model_name}</div>
+                                        </div>
+                                        <div class="metric-card">
+                                            <div class="metric-title">Timestamp</div>
+                                            <div class="metric-value">${new Date().toLocaleDateString()}</div>
+                                        </div>
+                                        <div class="metric-card">
+                                            <div class="metric-title">Evaluation Version</div>
+                                            <div class="metric-value">V2</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        ${result.error_message ? `
+                        <div class="section-card">
+                            <div class="section-header" style="background: #fef2f2; border-bottom-color: #fecaca;">
+                                <i class="fas fa-exclamation-triangle" style="color: #dc2626;"></i>
+                                <h6 style="color: #dc2626;">Error Details</h6>
+                            </div>
+                            <div class="section-body">
+                                <div class="code-display" style="background: #fef2f2; color: #dc2626; border: 1px solid #fecaca;">${escapeHtml(result.error_message)}</div>
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            // Initialize Bootstrap tabs
+            const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+            modal.show();
+
+            // Initialize tabs after modal is shown
+            setTimeout(() => {
+                const triggerTabList = [].slice.call(document.querySelectorAll('#detailsTabs button'));
+                triggerTabList.forEach(function (triggerEl) {
+                    const tabTrigger = new bootstrap.Tab(triggerEl);
+                    triggerEl.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        tabTrigger.show();
+                    });
+                });
+            }, 100);
+        }
+
+        // Helper function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Attach click handlers to details buttons (delegated)
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.details-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.getAttribute('data-index'));
+                    if (!Number.isNaN(idx)) showDetails(idx);
+                });
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
