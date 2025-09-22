@@ -219,21 +219,24 @@ We evaluated multiple code-generation models using the HumanEval-Comm V2 framewo
 - Export results using the Aggregator module.
 - Visualize and compare results using the Flask leaderboard app.
 
+
 ## References
 
-
+**Papers & Datasets:**
 - Wu, Jie JW, and Fatemeh H. Fard. ["HumanEvalComm: Benchmarking the Communication Competence of Code Generation for LLMs and LLM Agent."](https://arxiv.org/abs/2406.00215) arXiv:2406.00215 (2025).
 - Chen, Mark, et al. ["Evaluating Large Language Models Trained on Code."](https://arxiv.org/abs/2107.03374) arXiv:2107.03374 (2021).
 - Zheng, Yuxuan, et al. ["CodeGeeX: A Large-Scale Multilingual Code Generation Model."](https://arxiv.org/abs/2303.17568) arXiv:2303.17568 (2023).
-- Qwen2.5 Model Card: [https://arxiv.org/abs/2405.18247](https://arxiv.org/abs/2405.18247)
-- Pylint: [https://arxiv.org/abs/1407.4114](https://arxiv.org/abs/1407.4114)
-- Bandit: [https://arxiv.org/abs/1707.08567](https://arxiv.org/abs/1707.08567)
-- Radon: [https://arxiv.org/abs/1407.4114](https://arxiv.org/abs/1407.4114)
-- Mypy: [https://arxiv.org/abs/1605.07420](https://arxiv.org/abs/1605.07420)
-- Pytest: [https://arxiv.org/abs/1707.08567](https://arxiv.org/abs/1707.08567)
-- Hypothesis: [https://arxiv.org/abs/1707.08567](https://arxiv.org/abs/1707.08567)
-- Flask: [https://arxiv.org/abs/1707.08567](https://arxiv.org/abs/1707.08567)
-- Plotly: [https://arxiv.org/abs/1707.08567](https://arxiv.org/abs/1707.08567)
-- HumanEvalComm Dataset: [https://arxiv.org/abs/2406.00215](https://arxiv.org/abs/2406.00215)
+- Qwen2.5 Model Card: [Hugging Face Model Card](https://huggingface.co/Qwen/Qwen2.5-Coder-32B) | [Technical Report (arXiv)](https://arxiv.org/abs/2409.12186)
+ - HumanEval Dataset: [GitHub](https://github.com/openai/human-eval)
+
+**Tools & Libraries:**
+- [Pylint](https://pylint.pycqa.org/)
+- [Bandit](https://bandit.readthedocs.io/)
+- [Radon](https://radon.readthedocs.io/)
+- [Mypy](https://mypy-lang.org/)
+- [Pytest](https://docs.pytest.org/)
+- [Hypothesis](https://hypothesis.readthedocs.io/)
+- [Flask](https://flask.palletsprojects.com/)
+- [Plotly](https://plotly.com/python/)
 
 
