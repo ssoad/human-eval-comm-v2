@@ -99,7 +99,7 @@ class EvaluationResult:
 class V2BenchmarkFixed:
     """Completely fixed V2 benchmark runner."""
     
-    def __init__(self, request_delay: float = 5.0):
+    def __init__(self, request_delay: float = 5.0, api_provider: str = "huggingface"):
         """Initialize with longer delay for free API."""
         self.enhanced_aggregator = None
         self.fuzzer = None
@@ -107,11 +107,13 @@ class V2BenchmarkFixed:
         self.client = None
         self.sandbox_available = False
         self.request_delay = request_delay
+        self.api_provider = api_provider
         
         self._initialize_components()
-        self._initialize_client()
+        self._initialize_client(api_provider)
         
         logger.info(f"✅ Request delay set to {request_delay}s for free API")
+        logger.info(f"✅ API provider set to {api_provider}")
     
     def _initialize_components(self):
         """Initialize V2 evaluator components."""
@@ -136,23 +138,37 @@ class V2BenchmarkFixed:
             logger.error(f"❌ Error importing V2 evaluators: {e}")
             raise
     
-    def _initialize_client(self):
-        """Initialize HuggingFace client."""
+    def _initialize_client(self, api_provider: str = "huggingface"):
+        """Initialize API client based on provider."""
         from openai import OpenAI
         from dotenv import load_dotenv
         
         load_dotenv()
         
-        hf_token = os.getenv("HF_TOKEN")
-        if not hf_token:
-            raise ValueError("❌ No HuggingFace API token found!")
-        
-        self.client = OpenAI(
-            base_url="https://router.huggingface.co/v1",
-            api_key=hf_token,
-        )
-        
-        logger.info("✅ HuggingFace client initialized")
+        if api_provider.lower() == "huggingface":
+            hf_token = os.getenv("HF_TOKEN")
+            if not hf_token:
+                raise ValueError("❌ No HuggingFace API token found! Set HF_TOKEN in .env file")
+            
+            self.client = OpenAI(
+                base_url="https://router.huggingface.co/v1",
+                api_key=hf_token,
+            )
+            logger.info("✅ HuggingFace client initialized")
+            
+        elif api_provider.lower() == "openrouter":
+            or_token = os.getenv("OPENROUTER_API_KEY")
+            if not or_token:
+                raise ValueError("❌ No OpenRouter API token found! Set OPENROUTER_API_KEY in .env file")
+            
+            self.client = OpenAI(
+                base_url="https://openrouter.ai/api/v1",
+                api_key=or_token,
+            )
+            logger.info("✅ OpenRouter client initialized")
+            
+        else:
+            raise ValueError(f"❌ Unsupported API provider: {api_provider}. Supported: huggingface, openrouter")
     
     def load_dataset(self, dataset_path: str = "data/benchmark/HumanEvalComm.jsonl", max_problems: int = 3) -> List[Dict]:
         """Load HumanEvalComm dataset."""
@@ -979,6 +995,9 @@ async def main():
                        help='Maximum number of problems to evaluate')
     parser.add_argument('--request-delay', type=float, default=6.0,
                        help='Delay between API requests in seconds')
+    parser.add_argument('--api-provider', type=str, default='huggingface',
+                       choices=['huggingface', 'openrouter'],
+                       help='API provider to use (huggingface or openrouter)')
     parser.add_argument('--verbose', action='store_true',
                        help='Enable verbose logging')
     
@@ -991,12 +1010,13 @@ async def main():
     print("=" * 80)
     print(f"Dataset: {args.dataset_path}")
     print(f"Output Directory: {args.output_dir}")
+    print(f"API Provider: {args.api_provider}")
     print(f"Models: {len(args.models)}")
     print(f"Max Problems: {args.max_problems}")
     print(f"Request Delay: {args.request_delay}s")
     
-    # Initialize with configurable delay
-    benchmark = V2BenchmarkFixed(request_delay=args.request_delay)
+    # Initialize with configurable delay and API provider
+    benchmark = V2BenchmarkFixed(request_delay=args.request_delay, api_provider=args.api_provider)
     
     # Load dataset
     problems = benchmark.load_dataset(args.dataset_path, args.max_problems)

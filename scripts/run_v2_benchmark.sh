@@ -5,16 +5,42 @@
 # Default configuration
 DATASET_PATH="data/benchmark/HumanEvalComm.jsonl"
 OUTPUT_DIR="./benchmark_results"
-MODELS=(
+API_PROVIDER="huggingface"
+VERBOSE=false
+
+# Model configurations for different providers
+HUGGINGFACE_MODELS=(
     "llama3-8b:meta-llama/Llama-3.1-8B-Instruct:cerebras"
     "qwen-coder:Qwen/Qwen2.5-Coder-32B-Instruct:together"
     "deepseek-r1:deepseek-ai/DeepSeek-R1:novita"
     "codebert-base:microsoft/codebert-base"
     "gpt-oss-20b:openai/gpt-oss-20b:nebius"
 )
+
+OPENROUTER_MODELS=(
+    "gpt-4o-mini:openai/gpt-4o-mini"
+    "claude-3-haiku:anthropic/claude-3-haiku"
+    "llama-3.1-8b:meta-llama/llama-3.1-8b-instruct"
+    "qwen-2.5-coder-32b:qwen/qwen-2.5-coder-32b-instruct"
+    "deepseek-chat:deepseek/deepseek-chat"
+)
+
+# Set default models based on API provider
+case $API_PROVIDER in
+    "huggingface")
+        MODELS=("${HUGGINGFACE_MODELS[@]}")
+        ;;
+    "openrouter")
+        MODELS=("${OPENROUTER_MODELS[@]}")
+        ;;
+    *)
+        echo "Unknown API provider: $API_PROVIDER"
+        exit 1
+        ;;
+esac
+
 MAX_PROBLEMS=3
 REQUEST_DELAY=6.0
-VERBOSE=false
 
 # Function to display usage
 usage() {
@@ -25,10 +51,17 @@ usage() {
     echo "Options:"
     echo "  --dataset-path PATH    Path to dataset file (default: $DATASET_PATH)"
     echo "  --output-dir DIR       Directory to save results (default: $OUTPUT_DIR)"
+    echo "  --api-provider PROVIDER API provider (huggingface or openrouter, default: $API_PROVIDER)"
+    echo "                         Automatically sets appropriate free models for the provider"
     echo "  --models MODEL_SPEC    Model specifications (can be used multiple times)"
     echo "                         Format: name:model_id[:provider][:max_tokens][:temperature]"
-    echo "                         Default models:"
-    for model in "${MODELS[@]}"; do
+    echo "                         If not specified, uses provider-specific defaults:"
+    echo "                         HuggingFace models:"
+    for model in "${HUGGINGFACE_MODELS[@]}"; do
+        echo "                           $model"
+    done
+    echo "                         OpenRouter models:"
+    for model in "${OPENROUTER_MODELS[@]}"; do
         echo "                           $model"
     done
     echo "  --max-problems N       Maximum number of problems to evaluate (default: $MAX_PROBLEMS)"
@@ -40,6 +73,8 @@ usage() {
     echo "  $0 --max-problems 10"
     echo "  $0 --output-dir ./my_results --models llama3-8b:meta-llama/Llama-3.1-8B-Instruct:cerebras"
     echo "  $0 --dataset-path ./custom_dataset.jsonl --verbose"
+    echo "  $0 --api-provider openrouter  # Uses OpenRouter's free models automatically"
+    echo "  $0 --api-provider huggingface # Uses HuggingFace's free models automatically"
 }
 
 # Parse command line arguments
@@ -52,6 +87,23 @@ while [[ $# -gt 0 ]]; do
             ;;
         --output-dir)
             OUTPUT_DIR="$2"
+            shift 2
+            ;;
+        --api-provider)
+            API_PROVIDER="$2"
+            # Update models based on new provider
+            case $API_PROVIDER in
+                "huggingface")
+                    MODELS=("${HUGGINGFACE_MODELS[@]}")
+                    ;;
+                "openrouter")
+                    MODELS=("${OPENROUTER_MODELS[@]}")
+                    ;;
+                *)
+                    echo "Unknown API provider: $API_PROVIDER"
+                    exit 1
+                    ;;
+            esac
             shift 2
             ;;
         --models)
@@ -91,6 +143,7 @@ fi
 CMD="cd src && python v2_benchmark.py"
 CMD="$CMD --dataset-path ../$DATASET_PATH"
 CMD="$CMD --output-dir ../$OUTPUT_DIR"
+CMD="$CMD --api-provider $API_PROVIDER"
 CMD="$CMD --max-problems $MAX_PROBLEMS"
 CMD="$CMD --request-delay $REQUEST_DELAY"
 
@@ -108,6 +161,7 @@ echo "🚀 Running HumanEvalComm V2 Benchmark"
 echo "====================================="
 echo "Dataset: $DATASET_PATH"
 echo "Output Directory: $OUTPUT_DIR"
+echo "API Provider: $API_PROVIDER"
 echo "Models: ${#MODELS[@]}"
 echo "Max Problems: $MAX_PROBLEMS"
 echo "Request Delay: ${REQUEST_DELAY}s"

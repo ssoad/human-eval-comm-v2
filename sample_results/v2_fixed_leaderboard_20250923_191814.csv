@@ -1,0 +1,6 @@
+Model,Comm Rate,Good Q Rate,Pass@1,Test Pass,Readability,Security,Efficiency,Reliability,V2 Score
+deepseek-chat,50%,100%,100%,0%,94,61,1.00,0.96,6.3
+gpt-4o-mini,50%,90%,100%,0%,96,69,1.00,0.88,6.2
+llama-3.1-8b,50%,90%,100%,0%,97,70,1.00,0.88,6.2
+claude-3-haiku,100%,80%,0%,0%,0,0,0.00,0.00,0.0
+qwen-2.5-coder-32b,100%,60%,0%,0%,0,0,0.00,0.00,0.0
