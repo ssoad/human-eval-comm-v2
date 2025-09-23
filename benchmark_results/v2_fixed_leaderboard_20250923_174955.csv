@@ -1,0 +1,2 @@
+Model,Comm Rate,Good Q Rate,Pass@1,Test Pass,Readability,Security,Efficiency,Reliability,V2 Score
+llama3-8b,50%,70%,100%,0%,81,74,1.00,1.00,4.3

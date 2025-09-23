@@ -9,7 +9,7 @@ from unittest.mock import Mock, mock_open, patch
 
 import pytest
 
-from evaluators.automated_static_dynamic import (
+from src.automated_static_dynamic import (
     AutomatedStaticDynamic,
     DynamicTestResults,
     StaticAnalysisResults,

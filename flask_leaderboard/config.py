@@ -13,10 +13,10 @@ class Config:
     PORT = 8080
 
     # Data settings - configurable data directory
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     # Default to benchmark_v2 directory for V2 results
     DATA_DIR = os.environ.get('HUMANEVAL_DATA_DIR',
-                              os.path.join(BASE_DIR, 'benchmark_v2'))
+                              os.path.join(BASE_DIR, 'sample_results'))
 
     LEADERBOARD_PATTERN = 'v2_*leaderboard*.csv'
     RESULTS_PATTERN = 'v2_*results*.json'

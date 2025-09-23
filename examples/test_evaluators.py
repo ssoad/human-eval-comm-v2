@@ -13,11 +13,11 @@ def test_imports():
     """Test that all modules can be imported."""
     try:
         # Test imports without using the classes
-        import evaluators.aggregator  # noqa: F401
-        import evaluators.automated_static_dynamic  # noqa: F401
-        import evaluators.calibration  # noqa: F401
-        import evaluators.multi_llm_judge  # noqa: F401
-        import evaluators.sandbox_runner  # noqa: F401
+        import src.aggregator  # noqa: F401
+        import src.automated_static_dynamic  # noqa: F401
+        import src.calibration  # noqa: F401
+        import src.multi_llm_judge  # noqa: F401
+        import src.sandbox_runner  # noqa: F401
 
         print("✓ All modules imported successfully")
         return True
@@ -30,11 +30,11 @@ def test_basic_functionality():
     """Test basic functionality of each module."""
     try:
         # Import modules in function scope
-        from evaluators.aggregator import Aggregator
-        from evaluators.automated_static_dynamic import AutomatedStaticDynamic
-        from evaluators.calibration import Calibration
-        from evaluators.multi_llm_judge import MultiLLMJudge
-        from evaluators.sandbox_runner import SandboxRunner
+        from src.aggregator import Aggregator
+        from src.automated_static_dynamic import AutomatedStaticDynamic
+        from src.calibration import Calibration
+        from src.multi_llm_judge import MultiLLMJudge
+        from src.sandbox_runner import SandboxRunner
 
         # Test MultiLLMJudge
         MultiLLMJudge()
@@ -65,8 +65,8 @@ def test_basic_functionality():
 def test_sample_evaluation():
     """Test a sample evaluation workflow."""
     try:
-        from evaluators.aggregator import Aggregator
-        from evaluators.automated_static_dynamic import (
+        from src.aggregator import Aggregator
+        from src.automated_static_dynamic import (
             DynamicTestResults,
             StaticAnalysisResults,
         )

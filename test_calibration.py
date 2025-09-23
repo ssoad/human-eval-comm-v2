@@ -10,7 +10,7 @@ from unittest.mock import Mock, mock_open, patch
 import numpy as np
 import pytest
 
-from evaluators.calibration import (
+from src.calibration import (
     Calibration,
     CalibrationData,
     CalibrationResult,

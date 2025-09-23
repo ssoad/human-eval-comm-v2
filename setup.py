@@ -54,6 +54,8 @@ setup(
         "pyyaml>=6.0",
         "tqdm>=4.64.0",
         "pathlib>=1.0.1",
+        "dotenv>=0.20.0",
+        "openai>=0.27.0",
     ],
     extras_require={
         "dev": [

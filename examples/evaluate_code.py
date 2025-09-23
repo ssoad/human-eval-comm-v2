@@ -9,7 +9,7 @@ import json
 import sys
 from pathlib import Path
 
-from evaluators import Aggregator, AutomatedStaticDynamic, MultiLLMJudge, SandboxRunner
+from src import Aggregator, AutomatedStaticDynamic, MultiLLMJudge, SandboxRunner
 
 
 def load_code_from_file(file_path):
@@ -53,7 +53,7 @@ def evaluate_single_code(
     except Exception as e:
         print(f"   ⚠️  Static/dynamic analysis failed: {e}")
         # Create dummy results for failed analysis
-        from evaluators.automated_static_dynamic import (
+        from src.automated_static_dynamic import (
             DynamicTestResults,
             StaticAnalysisResults,
         )
@@ -89,7 +89,7 @@ def evaluate_single_code(
     except Exception as e:
         print(f"   ⚠️  Sandbox execution failed: {e}")
         # Create dummy result for failed execution
-        from evaluators.sandbox_runner import ExecutionResult
+        from src.sandbox_runner import ExecutionResult
 
         execution_result = ExecutionResult(
             success=False,

@@ -3,11 +3,14 @@
 # Small wrapper script to run the configurable V2 benchmark
 
 # Default configuration
-DATASET_PATH="Benchmark/HumanEvalComm.jsonl"
+DATASET_PATH="data/benchmark/HumanEvalComm.jsonl"
 OUTPUT_DIR="./benchmark_results"
 MODELS=(
     "llama3-8b:meta-llama/Llama-3.1-8B-Instruct:cerebras"
     "qwen-coder:Qwen/Qwen2.5-Coder-32B-Instruct:together"
+    "deepseek-r1:deepseek-ai/DeepSeek-R1:novita"
+    "codebert-base:microsoft/codebert-base"
+    "gpt-oss-20b:openai/gpt-oss-20b:nebius"
 )
 MAX_PROBLEMS=3
 REQUEST_DELAY=6.0
@@ -85,7 +88,7 @@ if [ ${#CUSTOM_MODELS[@]} -gt 0 ]; then
 fi
 
 # Build the command
-CMD="cd benchmark_v2 && python v2_benchmark_completely_fixed.py"
+CMD="cd src && python v2_benchmark.py"
 CMD="$CMD --dataset-path ../$DATASET_PATH"
 CMD="$CMD --output-dir ../$OUTPUT_DIR"
 CMD="$CMD --max-problems $MAX_PROBLEMS"

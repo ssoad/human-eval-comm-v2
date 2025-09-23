@@ -10,13 +10,13 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from evaluators.aggregator import Aggregator, EvaluationWeights, ProblemEvaluation
-from evaluators.automated_static_dynamic import (
+from src.aggregator import Aggregator, EvaluationWeights, ProblemEvaluation
+from src.automated_static_dynamic import (
     DynamicTestResults,
     StaticAnalysisResults,
 )
-from evaluators.multi_llm_judge import JudgeResponse, NormalizedScores
-from evaluators.sandbox_runner import ExecutionResult
+from src.multi_llm_judge import JudgeResponse, NormalizedScores
+from src.sandbox_runner import ExecutionResult
 
 
 class TestEvaluationWeights:

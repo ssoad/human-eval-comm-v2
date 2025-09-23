@@ -83,6 +83,10 @@ class LeaderboardManager:
                 # Convert to numeric
                 df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
 
+                # Normalize Efficiency and Reliability from 0-1 scale to 0-100 scale
+                if col in ['Efficiency', 'Reliability']:
+                    df[col] = df[col] * 100
+
             # Debug: print cleaned DataFrame info
             print(f"[DEBUG] Successfully loaded and cleaned {file_path}")
             print(f"[DEBUG] DataFrame shape: {df.shape}")

@@ -10,7 +10,7 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 
-from evaluators.multi_llm_judge import JudgeResponse, MultiLLMJudge, NormalizedScores
+from src.multi_llm_judge import JudgeResponse, MultiLLMJudge, NormalizedScores
 
 
 class TestMultiLLMJudge:

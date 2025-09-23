@@ -10,7 +10,7 @@ from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 
-from evaluators.sandbox_runner import ExecutionResult, ResourceLimits, SandboxRunner
+from src.sandbox_runner import ExecutionResult, ResourceLimits, SandboxRunner
 
 
 class TestResourceLimits:
