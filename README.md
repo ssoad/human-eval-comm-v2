@@ -203,6 +203,8 @@ We evaluated multiple code-generation models using the HumanEval-Comm V2 framewo
 
 **Leaderboard Results (Sample):**
 
+![Leaderboard Screenshot](docs/leaderboard.png)
+
 | Model                       | Comm Rate | Good Q Rate | Pass@1 | Test Pass | Readability | Security | Efficiency | Reliability | V2 Score |
 |-----------------------------|-----------|-------------|--------|-----------|-------------|----------|------------|-------------|----------|
 | Qwen2.5-Coder-32B-Instruct  | 50%       | 77%         | 100%   | 4%        | 94          | 74       | 1.00       | 0.95        | 7.7      |
