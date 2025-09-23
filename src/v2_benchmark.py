@@ -144,6 +144,7 @@ class V2BenchmarkFixed:
         load_dotenv()
         
         hf_token = os.getenv("HF_TOKEN")
+        if not hf_token:
             raise ValueError("❌ No HuggingFace API token found!")
         
         self.client = OpenAI(
