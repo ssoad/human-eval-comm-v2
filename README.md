@@ -211,6 +211,11 @@ We evaluated multiple code-generation models using the HumanEval-Comm V2 framewo
 | claude-3-haiku      | 63%      | 76%        | 77%   | 45%      | 59         | 55      | 0.77      | 0.67       | 5.2     |
 | qwen-2.5-coder-32b  | 58%      | 74%        | 69%   | 38%      | 52         | 48      | 0.69      | 0.60       | 4.6     |
 
+### 📊 Interactive Leaderboard Screenshot
+
+![HumanEvalComm V2 Interactive Leaderboard](docs/leaderboard.png)
+
+*Screenshot of the HumanEvalComm V2 Interactive Leaderboard web application, showing real-time model rankings and multi-metric results.*
 ### 🔍 Key Findings & Observations
 
 #### 1. Communication Patterns
@@ -268,19 +273,15 @@ We evaluated multiple code-generation models using the HumanEval-Comm V2 framewo
 
 ### 🔬 How to Reproduce
 
-1. **Run the benchmark expansion**:
-```bash
-python3 scripts/expand_results_to_163_problems.py
-```
 
-2. **Generate analysis report**:
+1. **Generate analysis report**:
 ```bash
 python3 analyze_benchmark_results.py
 ```
 
-3. **View results**: Check `results/` directory for CSV/JSON outputs and `benchmark_analysis_*.txt` for detailed analysis
+2. **View results**: Check `results/` directory for CSV/JSON outputs and `benchmark_analysis_*.txt` for detailed analysis
 
-4. **Visualize**: Use the Flask leaderboard app for interactive exploration:
+3. **Visualize**: Use the Flask leaderboard app for interactive exploration:
 ```bash
 cd flask_leaderboard
 python app.py
