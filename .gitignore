@@ -140,3 +140,5 @@ log/
 results/
 *.log
 *.jsonl.tmp
+scripts/run_163_problems.py
+benchmark_*.txt

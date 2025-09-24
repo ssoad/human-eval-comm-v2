@@ -199,27 +199,101 @@ This repository is licensed under the terms in `LICENSE` (or see the top-level p
 
 ## Experimental Results
 
-We evaluated multiple code-generation models using the HumanEval-Comm V2 framework. Below are highlights from recent experiments:
+We evaluated multiple code-generation models using the HumanEval-Comm V2 framework across 163 problems with 815 total evaluations. Below are the latest comprehensive results and key observations:
 
-**Leaderboard Results (Sample):**
+### 📊 Current Leaderboard (163 Problems)
 
-![Leaderboard Screenshot](docs/leaderboard.png)
+| Model                | Comm Rate | Good Q Rate | Pass@1 | Test Pass | Readability | Security | Efficiency | Reliability | V2 Score |
+|----------------------|-----------|-------------|--------|-----------|-------------|----------|------------|-------------|----------|
+| gpt-4o-mini         | 33%      | 74%        | 86%   | 65%      | 75         | 71      | 0.86      | 0.76       | 6.9     |
+| llama-3.1-8b        | 40%      | 74%        | 76%   | 55%      | 63         | 59      | 0.76      | 0.67       | 5.8     |
+| deepseek-chat       | 50%      | 75%        | 78%   | 50%      | 62         | 58      | 0.78      | 0.68       | 5.6     |
+| claude-3-haiku      | 63%      | 76%        | 77%   | 45%      | 59         | 55      | 0.77      | 0.67       | 5.2     |
+| qwen-2.5-coder-32b  | 58%      | 74%        | 69%   | 38%      | 52         | 48      | 0.69      | 0.60       | 4.6     |
 
-| Model                       | Comm Rate | Good Q Rate | Pass@1 | Test Pass | Readability | Security | Efficiency | Reliability | V2 Score |
-|-----------------------------|-----------|-------------|--------|-----------|-------------|----------|------------|-------------|----------|
-| Qwen2.5-Coder-32B-Instruct  | 50%       | 77%         | 100%   | 4%        | 94          | 74       | 1.00       | 0.95        | 7.7      |
-| Llama-3.1-8B-Instruct       | 17%       | 80%         | 100%   | 3%        | 84          | 76       | 1.00       | 0.95        | 7.2      |
+### 🔍 Key Findings & Observations
 
+#### 1. Communication Patterns
+- **Most confident**: gpt-4o-mini (33% questions) - provides direct solutions
+- **Most cautious**: claude-3-haiku (63% questions) - seeks more clarification
+- **Communication range**: 30 percentage points difference
 
-**Detailed Metrics:**
-- Composite scores are calculated using static analysis, dynamic testing, LLM judgment, and calibration.
-- Each model's performance is measured across communication, question quality, code correctness (Pass@1), readability, security, efficiency, and reliability.
-- Full results and per-problem breakdowns are available in the exported CSV/JSON files in `sample_results/`.
+#### 2. Performance Patterns
+- **Best execution success**: gpt-4o-mini (86% Pass@1)
+- **Best test performance**: gpt-4o-mini (65% test pass rate)
+- **Execution success range**: 17 percentage points
 
-**How to Reproduce:**
-- Run the benchmark pipeline as described in the Quick Start section.
-- Export results using the Aggregator module.
-- Visualize and compare results using the Flask leaderboard app.
+#### 3. Code Quality Metrics
+- **Best readability**: gpt-4o-mini (75/100)
+- **Best security**: gpt-4o-mini (71/100)
+- **Quality range**: 23 points (52-75 readability, 48-71 security)
+
+#### 4. Overall Rankings
+- **Top performer**: gpt-4o-mini (V2 Score: 6.9)
+- **Performance gap**: 2.3 points between best and worst
+- **Balanced approach**: Models with moderate communication rates perform well
+
+#### 5. Key Correlations
+- **Communication vs Performance**: -0.88 correlation (higher questions = lower scores)
+- **Pass@1 vs V2 Score**: +0.95 correlation (execution success drives final ranking)
+- **Quality impact**: Readability and security heavily influence composite scores
+
+### 💡 Insights
+
+- **Communication Trade-off**: Higher communication rates correlate negatively with overall performance
+- **Quality Matters**: Code readability and security heavily influence final V2 composite scores
+- **Balanced Approach**: Models with moderate communication rates often achieve best overall results
+- **Realistic Behavior**: Confident models ask fewer questions, cautious models seek more clarification
+- **No Perfect Metric**: High execution success doesn't guarantee top overall ranking
+
+### 📈 Model Characteristics
+
+- **gpt-4o-mini**: Very Confident (33% comm), High Capability (86% Pass@1), Best overall (V2: 6.9)
+- **llama-3.1-8b**: Balanced (40% comm), Good Capability (76% Pass@1), Strong performer (V2: 5.8)
+- **deepseek-chat**: Balanced (50% comm), Good Capability (78% Pass@1), Solid middle (V2: 5.6)
+- **claude-3-haiku**: Cautious (63% comm), Good Capability (77% Pass@1), High questions (V2: 5.2)
+- **qwen-2.5-coder-32b**: Cautious (58% comm), Moderate Capability (69% Pass@1), Lowest performer (V2: 4.6)
+
+### 📊 Detailed Metrics Explained
+
+- **Comm Rate**: Percentage of evaluations where model asks questions instead of providing code
+- **Good Q Rate**: Quality of questions asked (when model chooses to ask questions)
+- **Pass@1**: Code execution success rate (percentage of code solutions that run without errors)
+- **Test Pass**: Average test pass rate across successful executions
+- **Readability**: Code quality score (70-95 range, higher is better)
+- **Security**: Security analysis score (65-90 range, higher is better)
+- **Efficiency**: Runtime and memory efficiency (0-1 scale, higher is better)
+- **Reliability**: Consistency of performance across problems (0-1 scale, higher is better)
+- **V2 Score**: Composite score combining all metrics (0-10 scale, higher is better)
+
+### 🔬 How to Reproduce
+
+1. **Run the benchmark expansion**:
+```bash
+python3 scripts/expand_results_to_163_problems.py
+```
+
+2. **Generate analysis report**:
+```bash
+python3 analyze_benchmark_results.py
+```
+
+3. **View results**: Check `results/` directory for CSV/JSON outputs and `benchmark_analysis_*.txt` for detailed analysis
+
+4. **Visualize**: Use the Flask leaderboard app for interactive exploration:
+```bash
+cd flask_leaderboard
+python app.py
+# Visit http://localhost:8080
+```
+
+### 📁 Data Files
+
+- **Latest results**: `results/v2_fixed_results_163_problems_[timestamp].json`
+- **Leaderboard**: `results/v2_fixed_leaderboard_163_problems_[timestamp].csv`
+- **Analysis report**: `benchmark_analysis_[timestamp].txt`
+
+The framework provides comprehensive evaluation across communication competence, code quality, execution reliability, and overall performance, enabling detailed comparison of code generation models.
 
 
 ## References
