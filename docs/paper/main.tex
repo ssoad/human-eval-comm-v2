@@ -49,7 +49,7 @@ The ability of large language models (LLMs) to engage in effective communication
 
 HumanEvalComm V2 introduces several key innovations: (1) a multi-model evaluation paradigm where LLMs serve dual roles as both code generators and intelligent evaluators, (2) enhanced communication metrics that capture nuanced aspects of clarification quality and problem comprehension, (3) a robust evaluation pipeline incorporating static analysis, dynamic testing, and security assessment, and (4) comprehensive trustworthiness metrics spanning reliability, security, and efficiency dimensions.
 
-We evaluate five state-of-the-art LLMs across 163 carefully crafted problem variants, revealing significant variations in communication competence that correlate with overall code generation quality. The results demonstrate that communication-aware models exhibit distinct behavioral patterns, with confident models achieving higher execution success rates while cautious models ask more clarification questions. Our analysis uncovers a fundamental trade-off between communication frequency and performance, with code quality metrics emerging as the strongest predictors of overall competence.
+Five state-of-the-art LLMs are evaluated across 163 carefully crafted problem variants, revealing significant variations in communication competence that correlate with overall code generation quality. The results demonstrate that communication-aware models exhibit distinct behavioral patterns, with confident models achieving higher execution success rates while cautious models ask more clarification questions. This analysis uncovers a fundamental trade-off between communication frequency and performance, with code quality metrics emerging as the strongest predictors of overall competence.
 
 This work establishes HumanEvalComm V2 as the most comprehensive benchmark for LLM communication competence, providing researchers and practitioners with actionable insights into building more collaborative and reliable AI coding assistants.
 \end{abstract}
@@ -491,11 +491,11 @@ We conducted a comprehensive evaluation of five state-of-the-art LLMs across the
     \item \textbf{Statistical Validation}: Cross-model evaluation with inter-rater reliability measures
 \end{itemize}
 
-The evaluation was conducted using our production-ready HumanEvalComm V2 framework, which implements the comprehensive evaluation pipeline described in Section III. All experiments were run with identical configurations to ensure fair comparison across models.
+The evaluation was conducted using the production-ready HumanEvalComm V2 framework, which implements the comprehensive evaluation pipeline described in Section III. All experiments were run with identical configurations to ensure fair comparison across models.
 
 \subsection{Communication Competence Results}
 
-Our analysis reveals significant variation in communication competence across the evaluated models, with clear patterns emerging in how different architectures approach clarification-seeking behavior.
+The analysis reveals significant variation in communication competence across the evaluated models, with clear patterns emerging in how different architectures approach clarification-seeking behavior.
 
 \subsubsection{Overall Communication Performance}
 
@@ -702,7 +702,7 @@ HumanEvalComm V2 provides comprehensive insights into the capabilities and limit
 
 \subsubsection{Communication-Performance Trade-off}
 
-Our large-scale evaluation across 163 problems reveals a fundamental trade-off between communication frequency and overall performance. Models that ask more questions tend to achieve lower composite scores, with a strong negative correlation ($\rho = -0.88$) between communication rate and V2 score.
+The large-scale evaluation across 163 problems reveals a fundamental trade-off between communication frequency and overall performance. Models that ask more questions tend to achieve lower composite scores, with a strong negative correlation ($\rho = -0.88$) between communication rate and V2 score.
 
 This finding suggests that while communication competence is valuable, excessive questioning may indicate underlying uncertainty or architectural limitations that impact code generation quality. The optimal balance appears to be moderate communication rates (40-50\%), as exemplified by Llama-3.1-8B and DeepSeek-Chat.
 
@@ -799,11 +799,11 @@ The cross-model evaluation approach revealed important meta-insights about evalu
 
 \section{Conclusion}
 
-HumanEvalComm V2 establishes a comprehensive benchmarking framework for evaluating LLM communication competence in code generation tasks. Through our large-scale evaluation of five state-of-the-art models across 163 problems, we provide empirical evidence of fundamental trade-offs between communication frequency and overall performance, with code quality emerging as the dominant factor in determining model rankings.
+HumanEvalComm V2 establishes a comprehensive benchmarking framework for evaluating LLM communication competence in code generation tasks. Through a large-scale evaluation of five state-of-the-art models across 163 problems, empirical evidence of fundamental trade-offs between communication frequency and overall performance is provided, with code quality emerging as the dominant factor in determining model rankings.
 
 The framework introduces several methodological innovations: (1) multi-model evaluation paradigms that enable cross-validation and bias detection, (2) comprehensive trustworthiness assessment integrating security, reliability, and efficiency metrics, and (3) a V2 composite scoring system that successfully differentiates model capabilities across a 2.3-point performance range.
 
-Our empirical findings reveal that while communication competence is valuable, excessive questioning correlates negatively with performance ($\rho = -0.88$), suggesting that the most effective AI coding assistants balance confidence with appropriate clarification-seeking. Code quality metrics demonstrate the strongest predictive power ($\rho = 0.99$ with final scores), indicating that readability and security should be prioritized in AI development efforts.
+Empirical findings reveal that while communication competence is valuable, excessive questioning correlates negatively with performance ($\rho = -0.88$), suggesting that the most effective AI coding assistants balance confidence with appropriate clarification-seeking. Code quality metrics demonstrate the strongest predictive power ($\rho = 0.99$ with final scores), indicating that readability and security should be prioritized in AI development efforts.
 
 The interactive leaderboard platform bridges the gap between academic research and practical application, providing developers with transparent, evidence-based guidance for AI tool selection. This implementation represents a significant advancement in making sophisticated evaluation frameworks accessible to practitioners.
 
