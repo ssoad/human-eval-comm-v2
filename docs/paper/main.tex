@@ -499,6 +499,7 @@ Our analysis reveals significant variation in communication competence across th
 
 \begin{table}[ht]
 \centering
+\small
 \caption{Communication Competence Results Across Models}
 \begin{tabular}{lccc}
 \toprule
@@ -536,6 +537,7 @@ This correlation can be quantified as:
 
 \begin{table}[ht]
 \centering
+\small
 \caption{Functional Correctness and Test Performance}
 \begin{tabular}{lcccc}
 \toprule
@@ -557,6 +559,7 @@ GPT-4o-mini demonstrates superior execution performance with an 86\% Pass@1 rate
 
 \begin{table}[ht]
 \centering
+\small
 \caption{Code Quality and Trustworthiness Metrics}
 \begin{tabular}{lccccc}
 \toprule
@@ -580,6 +583,7 @@ Code quality metrics reveal substantial variation across models, with readabilit
 
 \begin{table}[ht]
 \centering
+\small
 \caption{V2 Composite Score Rankings and Performance Gaps}
 \begin{tabular}{lcccc}
 \toprule
@@ -602,8 +606,14 @@ The V2 composite scoring system reveals clear performance differentiation, with 
 Statistical analysis reveals strong correlations between different performance dimensions:
 
 \begin{align}
-\rho(\text{Pass@1}, \text{V2 Score}) = 0.95 \\
-\rho(\text{Readability}, \text{V2 Score}) = 0.99 \\
+\rho(\text{Pass@1}, \text{V2 Score}) = 0.95
+\end{align}
+
+\begin{align}
+\rho(\text{Readability}, \text{V2 Score}) = 0.99
+\end{align}
+
+\begin{align}
 \rho(\text{Security}, \text{V2 Score}) = 0.99
 \end{align}
 
@@ -613,6 +623,7 @@ These correlations demonstrate that functional correctness, code readability, an
     \centering
     \begin{minipage}{0.45\textwidth}
         \centering
+        \small
         \caption{Communication Rate vs V2 Score Trade-off}
         \label{fig:comm_tradeoff}
         \begin{tabular}{lc}
@@ -632,6 +643,7 @@ These correlations demonstrate that functional correctness, code readability, an
     \hfill
     \begin{minipage}{0.45\textwidth}
         \centering
+        \small
         \caption{Code Quality Dominance in Rankings}
         \label{fig:quality_dominance}
         \begin{tabular}{lcc}
